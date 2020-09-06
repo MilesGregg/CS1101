@@ -7,7 +7,7 @@
 
 (define R1 (make-restaurant "Blank" "French" 10 40 true))
 (define R2 (make-restaurant "Blank1" "Pizza" 5 20 false))
-(define R3 (make-restaurant "Blank2" "Steakhouse" 50 250 true))
+(define R2 (make-restaurant "Blank2" "Steakhouse" 50 250 true))
 
 ;; 2.
 ;;constructor
@@ -24,11 +24,3 @@
 ;;restaurant?: Anytype -> Boolean
 
 ;; 3.
-
-;;restaurant-type: restaurant -> String
-;;consumes the restaurant and produces the type of restaurant
-(define (restaurant-type restaurant)
-  (cond [(and (>= (restaurant-tables restaurant) 30) (>= (restaurant-seats restaurant) 250)) "event venue"]
-        [(boolean=? (restaurant-vegetarian restaurant) true) "vegetarian-friendly"]
-        [else (restaurant-food restaurant)]))
-
