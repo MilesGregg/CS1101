@@ -44,7 +44,25 @@
 ;;consumes a reservation and number and produces a reservation party increased by the number
 
 (define (add-to-party reservation people)
-  (+ (reservation-party reservation) people)
-  reservation-restaurant-name reservation)
+  (+ (reservation-party reservation) people))
+
+;(define (add-to-party1 reservation people)
+;  (make-reservation (reservation-restaurant-name reservation)
+;                    (reservation-person reservation)                    
+;                    (reservation-phone reservation)
+;                    (reservation-date reservation)
+;                    (+ (reservation-party reservation) people)))
+
+(define (add-to-party1 reservation people new-res)
+  (define new-res(make-reservation (reservation-restaurant-name reservation)
+                    (reservation-person reservation)                    
+                    (reservation-phone reservation)
+                    (reservation-date reservation)
+                    (+ (reservation-party reservation) people))))
+
+
+
+
+  
 
 
