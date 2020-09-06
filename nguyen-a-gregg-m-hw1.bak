@@ -32,19 +32,3 @@
         [(boolean=? (restaurant-vegetarian restaurant) true) "vegetarian-friendly"]
         [else (restaurant-food restaurant)]))
 
-;; 4.
-
-(define-struct reservation (restaurant-name person phone date party))
-
-(define Res (make-reservation "Blank" "Bob" "111-212-3333" 9/6 12))
-(define Res1 (make-reservation "Blank1" "Joe" "123-212-3333" 9/4 10))
-(define Res2 (make-reservation "Blank2" "Lily" "511-212-3233" 9/9 4))
-
-;;add-to-party: reservation Number -> reservation
-;;consumes a reservation and number and produces a reservation party increased by the number
-
-(define (add-to-party reservation people)
-  (+ (reservation-party reservation) people)
-  reservation-restaurant-name reservation)
-
-
