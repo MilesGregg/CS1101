@@ -40,6 +40,7 @@
 (define Res1 (make-reservation "Blank1" "Joe" "123-212-3333" 9/4 10))
 (define Res2 (make-reservation "Blank2" "Lily" "511-212-3233" 9/9 4))
 
+;; 5.
 ;;add-to-party: reservation Number -> reservation
 ;;consumes a reservation and number and produces a reservation party increased by the number
 
@@ -53,12 +54,29 @@
 ;                    (reservation-date reservation)
 ;                    (+ (reservation-party reservation) people)))
 
-(define (add-to-party1 reservation people new-res)
-  (define new-res(make-reservation (reservation-restaurant-name reservation)
+(define (add-to-party1 reservation people)
+   (make-reservation (reservation-restaurant-name reservation)
                     (reservation-person reservation)                    
                     (reservation-phone reservation)
                     (reservation-date reservation)
-                    (+ (reservation-party reservation) people))))
+                    (+ (reservation-party reservation) people)))
+
+;; 6.
+
+;;precedes: Number Number -> Boolean
+;;Takes two dates and returns true if first date precedes second
+
+(define (precedes reservation1 reservation2)
+  (> (reservation-date reservation1)(reservation-date reservation2)))
+
+;; 7.
+
+;;reservation-OK?: reservation number -> boolean
+;;consumes reservation and date to get OK or Not OK
+
+(define (reservation-OK? reservation today-date restaurant)
+  (cond [(and (<= (reservation-date reservation) today-date) (>= (restaurant-seats restaurant) (reservation-party reservation))) "OK"]
+        [else "Not OK"]))
 
 
 
