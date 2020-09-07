@@ -32,6 +32,10 @@
         [(boolean=? (restaurant-vegetarian restaurant) true) "vegetarian-friendly"]
         [else (restaurant-food restaurant)]))
 
+(check-expect (restaurant-type R1) "vegetarian-friendly")
+(check-expect (restaurant-type R2) "Pizza")
+(check-expect (restaurant-type R3) "event venue")
+
 ;; 4.
 
 (define-struct reservation (restaurant-name person phone date party))
@@ -45,29 +49,27 @@
 ;;consumes a reservation and number and produces a reservation party increased by the number
 
 (define (add-to-party reservation people)
-  (+ (reservation-party reservation) people))
-
-;(define (add-to-party1 reservation people)
-;  (make-reservation (reservation-restaurant-name reservation)
-;                    (reservation-person reservation)                    
-;                    (reservation-phone reservation)
-;                    (reservation-date reservation)
-;                    (+ (reservation-party reservation) people)))
-
-(define (add-to-party1 reservation people)
    (make-reservation (reservation-restaurant-name reservation)
                     (reservation-person reservation)                    
                     (reservation-phone reservation)
                     (reservation-date reservation)
                     (+ (reservation-party reservation) people)))
 
+(check-expect (add-to-party Res 12) (make-reservation "Blank" "Bob" "111-212-3333" 9/6 24))
+(check-expect (add-to-party Res1 -6) (make-reservation "Blank1" "Joe" "123-212-3333" 9/4 4))
+(check-expect (add-to-party Res2 0) (make-reservation "Blank2" "Lily" "511-212-3233" 9/9 4))
+
 ;; 6.
 
 ;;precedes: Number Number -> Boolean
 ;;Takes two dates and returns true if first date precedes second
 
-(define (precedes reservation1 reservation2)
-  (> (reservation-date reservation1)(reservation-date reservation2)))
+(define (precedes? date1 date2)
+  (> date1 date2))
+
+(check-expect (precedes? 9/6 9/10) true)
+(check-expect (precedes? 9/12 9/10) false)
+(check-expect (precedes? 9/10 9/10) false)
 
 ;; 7.
 
@@ -75,12 +77,11 @@
 ;;consumes reservation and date to get OK or Not OK
 
 (define (reservation-OK? reservation today-date restaurant)
-  (cond [(and (<= (reservation-date reservation) today-date) (>= (restaurant-seats restaurant) (reservation-party reservation))) "OK"]
-        [else "Not OK"]))
+  (cond [(or (precedes? (reservation-date reservation) today-date)
+             (< (restaurant-seats restaurant) (reservation-party reservation))) "not OK"]
+        [else "OK"]))
 
-
-
-
-  
+(check-expect (reservation-OK? Res 9/9 R1) "not OK")
+(check-expect (reservation-OK? Res 9/4 R1) "OK")
 
 
