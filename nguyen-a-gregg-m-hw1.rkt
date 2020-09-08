@@ -67,14 +67,13 @@
 ;(define (precedes? date1 date2)
 ;  (> date1 date2))
 (define (precedes? date1 date2)
-  (cond (if (< (date-year date1) (date-year date2)))
-             true
-             false)
-        [(if (< (date-month date1) (date-month date2))
-             true
-             false)]
-        [(< (date-day date1) (date-day date2)) true]
-        [else false])
+  (if (> (date-year date1) (date-year date2))
+      false
+     (if (> (date-month date1) (date-month date2))
+         false
+         (if (>= (date-day date1) (date-day date2))
+             false
+             true))))
 
 (check-expect (precedes? (make-date 9 6 2020) (make-date 9 10 2020)) true)
 (check-expect (precedes? (make-date 9 4 2020) (make-date 9 2 2020)) false)
