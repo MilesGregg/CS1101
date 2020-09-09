@@ -1,7 +1,7 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname nguyen-a-gregg-m-hw1) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
-;;Aaron Nguyen, Miles Gregg
+;;Aaron Nguyen, Miles Gregg(mgregg)
 ;; 1.
 (define-struct restaurant (name food tables seats vegetarian))
 
