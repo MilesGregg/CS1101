@@ -19,8 +19,7 @@
 ;; unlimited? is if the plan allows unlimited rental or not
 (define-struct streaming (platform standard-definition? unlimited?))
 
-(define STREAM2 (make-streaming "PC" true true))
-(define STREAM3 (make-streaming "PC" false false))
+(define STREAM2 (make-streaming "PC" false false))
 
 ; plan
 ;; itemization:
@@ -36,17 +35,12 @@
         [(and (dvd? plan) (boolean=? (dvd-standard-definition? plan) true)) price]))
 
 (define (check-unlimited plan)
-  (cond [(and (dvd? plan)(boolean=? (dvd-unlimited? plan) true)) 3]
-        [(and (streaming? plan)(boolean=? (streaming-unlimited? plan) true)) 5]
-        [else 0]))
+  (cond [(and (dvd? plan)(boolean=? (dvd-unlimited? plan) true)) 3]))
 
 (define (monthly-cost plan)
   (cond [(dvd? plan) (cond [(= (dvd-number plan) 1) (+ (check-unlimited plan) (check-HD plan 7.99))]
-                           [(= (dvd-number plan) 2) (+ (check-unlimited plan) (check-HD plan 8.99))]
-                           [(= (dvd-number plan) 3) (+ (check-unlimited plan) (check-HD plan 9.99))]
-                           [(= (dvd-number plan) 4) (+ (check-unlimited plan) (check-HD plan 10.99))])]
-        [(streaming? plan) (if (boolean=? (streaming-standard-definition? plan) true)
-                               (+ 4.99 (check-unlimited plan))
-                               (+ 2.99 (check-unlimited plan)))]))
-
-(monthly-cost STREAM2)
+                           [(= (dvd-number plan) 2) (+ (check-unlimited plan) (check-HD plan 8.99)]
+                           [(= (dvd-number plan) 3) (+ (check-unlimited plan) (check-HD plan 9.99)]
+                           [(= (dvd-number plan) 4) (+ (check-unlimited plan) (check-HD plan 10.99)]
+        [(streaming? plan) ])]))
+        
