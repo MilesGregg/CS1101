@@ -30,7 +30,13 @@
 
 ;; 3.
 
+(define (check-HD plan price)
+  (cond [(dvd? plan)(boolean=? (dvd-standard-definition? plan) true) (+ 1 1)]))
+
 (define (monthly-cost plan)
-  (cond [(dvd? plan) (cond [(= (dvd-number plan) 3) 9.99])]
-        [(streaming? plan) "20"]))
+  (cond [(dvd? plan) (cond [(= (dvd-number plan) 1) 7.99]
+                           [(= (dvd-number plan) 2) 8.99]
+                           [(= (dvd-number plan) 3) 9.99]
+                           [(= (dvd-number plan) 4) 10.99]
+        [(streaming? plan) "20"])]))
         
