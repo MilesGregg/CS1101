@@ -7,7 +7,7 @@
 ;; standard-definition is if the subscriber has sd or hd
 ;; number is 1-4
 ;; unlimited? is if the plan allows unlimited rental or not
-(define-struct dvd (standard-definition? number unlimited?))
+(define-struct dvd (standard-definition number unlimited?))
 
 (define DVD1 (make-dvd true 3 true))
 
@@ -17,9 +17,9 @@
 ;; platform is the platform the user is using
 ;; number is 1-4
 ;; unlimited? is if the plan allows unlimited rental or not
-(define-struct streaming (platform standard-definition? unlimited?))
+(define-struct streaming (platform standard-definition unlimited?))
 
-(define STREAM2 (make-streaming "PC" false false))
+(define DVD2 (make-dvd "PC" false false))
 
 ; plan
 ;; itemization:
@@ -27,10 +27,3 @@
 (define-struct plan (type))
 
 (define PLAN1 DVD1)
-
-;; 3.
-
-(define (monthly-cost plan)
-  (cond [(dvd? plan) (cond [(= (dvd-number plan) 3) 9.99])]
-        [(streaming? plan) "20"]))
-        
