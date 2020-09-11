@@ -54,3 +54,26 @@
 (define (make-high-def aplan)
   (cond [(dvd? aplan) (make-dvd false (dvd-number aplan) (dvd-unlimited? aplan))]
         [(streaming? aplan) (make-streaming (streaming-platform aplan) false (streaming-unlimited? aplan))]))
+
+;; 5. 
+
+(define STRING1 (cons "testing" (cons "2" empty)))
+
+(define (contains-all-numbers? alos)
+  (cond [(empty? alos) false]
+        [(cons? alos) (if (number? (string->number (first alos)))
+                          true
+                          (contains-all-numbers? (rest alos)))]))
+
+
+
+
+
+
+
+
+
+
+
+
+
