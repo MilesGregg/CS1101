@@ -86,13 +86,16 @@
 
 (define list1 (make-ListOfNatural (cons 1 (cons 2 (cons 3 empty)))))
 
+(define (lengths-of-strings1 alos)
+  (cond [(empty? alos) empty]
+        [(cons? alos) (cons (string-length (first alos)) (lengths-of-strings (rest alos)))]))
+  
 (define (lengths-of-strings alos)
   (cond [(empty? alos) empty]
-        [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings (rest alos))))]))
+        [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings1 (rest alos))))]))
   
 
-
-
+(cons "add" (cons "bear" empty))
 
 
 
