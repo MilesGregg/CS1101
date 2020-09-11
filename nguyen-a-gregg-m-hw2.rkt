@@ -80,6 +80,17 @@
 
 (count-x STRINGTEST)
 
+;; 7.
+
+(define-struct ListOfNatural (list))
+
+(define list1 (make-ListOfNatural (cons 1 (cons 2 (cons 3 empty)))))
+
+(define (lengths-of-strings alos)
+  (cond [(empty? alos) empty]
+        [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings (rest alos))))]))
+  
+
 
 
 
