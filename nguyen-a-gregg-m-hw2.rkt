@@ -65,6 +65,21 @@
                           true
                           (contains-all-numbers? (rest alos)))]))
 
+;; 6.
+(define (check-X input)
+  (or (string-contains? "x" input)
+      (string-contains? "X" input)))
+
+(define (seperate-string input)
+  (if (check-X input)
+      (explode input)
+      false))
+ 
+(define (count-X alos)
+  (cond [(empty? alos) 0]
+        [(cons? alos) (if (check-X (first alos))
+                            (explode (first alos));(+ 1 (count-X (rest alos)))
+                            (count-X (rest alos)))]))
 
 
 
