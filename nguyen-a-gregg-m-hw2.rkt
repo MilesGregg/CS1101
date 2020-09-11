@@ -66,20 +66,20 @@
                           (contains-all-numbers? (rest alos)))]))
 
 ;; 6.
-(define (check-X input)
-  (or (string-contains? "x" input)
-      (string-contains? "X" input)))
 
-(define (seperate-string input)
-  (if (check-X input)
-      (explode input)
-      false))
- 
-(define (count-X alos)
+(define STRINGTEST (cons "testX" (cons "XjxXxX" empty)))
+
+(define (count-x alos)
   (cond [(empty? alos) 0]
-        [(cons? alos) (if (check-X (first alos))
-                            (explode (first alos));(+ 1 (count-X (rest alos)))
-                            (count-X (rest alos)))]))
+        [else (+ (x-counter (explode (first alos))) (count-x (rest alos)))]))
+
+(define (x-counter input)
+  (cond [(empty? input) 0]
+        [(or (string-contains? "x" (first input)) (string-contains? "X" (first input))) (+ 1 (x-counter (rest input)))]
+        [else (x-counter (rest input))]))
+
+(count-x STRINGTEST)
+
 
 
 
