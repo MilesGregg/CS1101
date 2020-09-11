@@ -49,4 +49,8 @@
                                (+ 4.99 (check-unlimited plan))
                                (+ 2.99 (check-unlimited plan)))]))
 
-(monthly-cost STREAM2)
+;; 4.
+
+(define (make-high-def aplan)
+  (cond [(dvd? aplan) (make-dvd false (dvd-number aplan) (dvd-unlimited? aplan))]
+        [(streaming? aplan) (make-streaming (streaming-platform aplan) false (streaming-unlimited? aplan))]))
