@@ -1,6 +1,11 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname nguyen-a-gregg-m-hw2) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
+
+;;----------------------------------------------------------------------------------------
+;; 1.
+
 ; dvd plan
 ;; itemization:
 ;; sigature: a dvd is (make-dvd boolean, number, boolean)
@@ -27,6 +32,7 @@
 (define STREAM4 (make-streaming "Mac" false false))
 (define STREAM5 (make-streaming "Android Phone" true true))
 (define STREAM6 (make-streaming "Roku" false true))
+
 ; plan
 ;; itemization:
 ;; the type of plan, either dvd or streaming
@@ -34,6 +40,7 @@
 
 (define PLAN1 DVD1)
 
+;;----------------------------------------------------------------------------------------
 ;; 2.
 
 ; ;; DVD-fcn:  DVD -> ...
@@ -55,8 +62,11 @@
 ; (define (rental-plan-fcn a-rental-plan)
 ;   (...  (rental-plan-type a-rental-plan)        ;; (make-fcn)
 
+;;----------------------------------------------------------------------------------------
 ;; 3.
 
+;;check-HD: plan Number -> Number
+;;consumes the plan and the price then it produces cost of a dvd based off the definition of it
 (define (check-HD plan price)
   (cond [(and (dvd? plan)(boolean=? (dvd-standard-definition? plan) false)) (+ price (* .50 (dvd-number plan)))]
         [(and (dvd? plan) (boolean=? (dvd-standard-definition? plan) true)) price]
@@ -66,6 +76,8 @@
 (check-expect (check-HD DVD1 3) 3.50)
 (check-expect (check-HD DVD2 4) 4)
 
+;;check-unlimited: plan -> Number
+;;consumes the plan then it produces cost of the plan based off the unlimited or not
 (define (check-unlimited plan)
   (cond [(and (dvd? plan)(boolean=? (dvd-unlimited? plan) true)) 3]
         [(and (streaming? plan)(boolean=? (streaming-unlimited? plan) true)) 5]
@@ -76,6 +88,8 @@
 (check-expect (check-unlimited DVD2) 0)
 (check-expect (check-unlimited STREAM2) 0)
 
+;;monthly-cost: plan -> Number
+;;consumes the plan then it produces cost of the monthly plan with the other features
 (define (monthly-cost plan)
   (cond [(dvd? plan) (cond [(= (dvd-number plan) 1) (+ (check-unlimited plan) (check-HD plan 7.99))]
                            [(= (dvd-number plan) 2) (+ (check-unlimited plan) (check-HD plan 8.99))]
@@ -92,8 +106,11 @@
 (check-expect (monthly-cost STREAM1) 9.99)
 (check-expect (monthly-cost STREAM2) 2.99)
 
+;;----------------------------------------------------------------------------------------
 ;; 4.
 
+;;make-high-def: aplan -> Plan
+;;consumes the plan then it produces the same plan but with high def included
 (define (make-high-def aplan)
   (cond [(dvd? aplan) (make-dvd false (dvd-number aplan) (dvd-unlimited? aplan))]
         [(streaming? aplan) (make-streaming (streaming-platform aplan) false (streaming-unlimited? aplan))]))
@@ -103,10 +120,13 @@
 (check-expect (make-high-def STREAM1) (make-streaming "PC" false true))
 (check-expect (make-high-def STREAM2) (make-streaming "PC" false false))
 
+;;----------------------------------------------------------------------------------------
 ;; 5. 
 
 (define STRING1 (cons "testing" (cons "2" empty)))
 
+;;contains-all-numbers?: alos -> boolean
+;;consumes a list of strings then it produces true if at least one of the strings is made up of all numbers
 (define (contains-all-numbers? alos)
   (cond [(empty? alos) false]
         [(cons? alos) (if (number? (string->number (first alos)))
@@ -117,11 +137,14 @@
 (check-expect (contains-all-numbers? STRING1) true)
 (check-expect (contains-all-numbers? (cons "dog" (cons "cat" empty))) false)
 (check-expect (contains-all-numbers? (cons "34" (cons "1" empty))) true)
- 
+
+;;----------------------------------------------------------------------------------------
 ;; 6.
 
 (define STRINGTEST (cons "testX" (cons "XjxXxX" empty)))
 
+;;count-x: alos -> Number
+;;consumes a list of strings then counts the number of x's or X's in a string list then produces the total
 (define (count-x alos)
   (cond [(empty? alos) 0]
         [else (+ (x-counter (explode (first alos))) (count-x (rest alos)))]))
@@ -130,6 +153,8 @@
 (check-expect (count-x STRINGTEST) 6)
 (check-expect (count-x (cons "apple" (cons "dog" empty))) 0)
 
+;;x-counter: alos -> Number
+;;consumes a list of strings then counts the number strings with x's or X's
 (define (x-counter input)
   (cond [(empty? input) 0]
         [(or (string-contains? "x" (first input)) (string-contains? "X" (first input))) (+ 1 (x-counter (rest input)))]
@@ -142,28 +167,26 @@
 
 (count-x STRINGTEST)
 
+;;----------------------------------------------------------------------------------------
 ;; 7.
 
 (define-struct ListOfNatural (list))
 
-(define list1 (make-ListOfNatural (cons 1 (cons 2 (cons 3 empty)))))
+(define StringL1 (cons "add" (cons "bear" empty)))
 
+;;lengths-of-strings1: alos -> alon
+;;consumes a list of strings then produces a list with their lengths
 (define (lengths-of-strings1 alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (cons (string-length (first alos)) (lengths-of-strings (rest alos)))]))
         
-
-
-  
+;;lengths-of-strings: alos -> ListOfNatural
+;;consumes a list of strings then produces a ListOfNatural with their string lengths
 (define (lengths-of-strings alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings1 (rest alos))))]))
 
 (check-expect (lengths-of-strings StringL1) (make-ListOfNatural (cons 3 (cons 4 ' ()))))
-  
-
-
-(define StringL1 (cons "add" (cons "bear" empty)))
 
 
 
