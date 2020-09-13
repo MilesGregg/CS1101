@@ -10,7 +10,9 @@
 (define-struct dvd (standard-definition? number unlimited?))
 
 (define DVD1 (make-dvd false 1 true))
-(define DVD2 (make-dvd true 3 false))
+(define DVD2 (make-dvd true 2 false))
+(define DVD3 (make-dvd false 3 false))
+(define DVD4 (make-dvd true 4 true))
 ; streaming plan
 ;; itemization:
 ;; a streaming is (make-streaming boolean, number, boolean)
@@ -19,9 +21,12 @@
 ;; unlimited? is if the plan allows unlimited rental or not
 (define-struct streaming (platform standard-definition? unlimited?))
 
-(define STREAM2 (make-streaming "PC" true true))
-(define STREAM3 (make-streaming "PC" false false))
-
+(define STREAM1 (make-streaming "PC" true true))
+(define STREAM2 (make-streaming "PC" false false))
+(define STREAM3 (make-streaming "PC" true false))
+(define STREAM4 (make-streaming "Mac" false false))
+(define STREAM5 (make-streaming "Android Phone" true true))
+(define STREAM6 (make-streaming "Roku" false true))
 ; plan
 ;; itemization:
 ;; the type of plan, either dvd or streaming
@@ -29,16 +34,47 @@
 
 (define PLAN1 DVD1)
 
+;; 2.
+
+; ;; DVD-fcn:  DVD -> ...
+; ;; ...
+; (define (DVD-fcn a-DVD)
+;   (...  (DVD-definition a-DVD)        ;; Boolean
+;         (DVD-amount a-DVD)        ;;Natural
+;         (DVD-rent-period a-DVD)))  ;;Boolean
+
+; ;; streaming-fcn:  streaming -> ...
+; ;; ...
+; (define (streaming-fcn a-streaming)
+;   (...  (streaming-platform a-streaming)        ;; String
+;         (streaming-defintion a-streaming)        ;;Boolean
+;         (streaming-time a-streaming)))  ;;Boolean
+
+; ;; rental-plan-fcn:  rental-plan -> ...
+; ;; ...
+; (define (rental-plan-fcn a-rental-plan)
+;   (...  (rental-plan-type a-rental-plan)        ;; (make-fcn)
+
 ;; 3.
 
 (define (check-HD plan price)
   (cond [(and (dvd? plan)(boolean=? (dvd-standard-definition? plan) false)) (+ price (* .50 (dvd-number plan)))]
-        [(and (dvd? plan) (boolean=? (dvd-standard-definition? plan) true)) price]))
+        [(and (dvd? plan) (boolean=? (dvd-standard-definition? plan) true)) price]
+        [else 0]))
+
+(check-expect (check-HD 5 0) 0)
+(check-expect (check-HD DVD1 3) 3.50)
+(check-expect (check-HD DVD2 4) 4)
 
 (define (check-unlimited plan)
   (cond [(and (dvd? plan)(boolean=? (dvd-unlimited? plan) true)) 3]
         [(and (streaming? plan)(boolean=? (streaming-unlimited? plan) true)) 5]
         [else 0]))
+
+(check-expect (check-unlimited STREAM1) 5)
+(check-expect (check-unlimited DVD1) 3)
+(check-expect (check-unlimited DVD2) 0)
+(check-expect (check-unlimited STREAM2) 0)
 
 (define (monthly-cost plan)
   (cond [(dvd? plan) (cond [(= (dvd-number plan) 1) (+ (check-unlimited plan) (check-HD plan 7.99))]
@@ -49,11 +85,23 @@
                                (+ 4.99 (check-unlimited plan))
                                (+ 2.99 (check-unlimited plan)))]))
 
+(check-expect (monthly-cost DVD1) 11.49)  
+(check-expect (monthly-cost DVD2) 8.99)
+(check-expect (monthly-cost DVD3) 11.49)
+(check-expect (monthly-cost DVD4) 13.99)
+(check-expect (monthly-cost STREAM1) 9.99)
+(check-expect (monthly-cost STREAM2) 2.99)
+
 ;; 4.
 
 (define (make-high-def aplan)
   (cond [(dvd? aplan) (make-dvd false (dvd-number aplan) (dvd-unlimited? aplan))]
         [(streaming? aplan) (make-streaming (streaming-platform aplan) false (streaming-unlimited? aplan))]))
+
+(check-expect (make-high-def DVD1) (make-dvd false 1 true))
+(check-expect (make-high-def DVD2) (make-dvd false 2 false))
+(check-expect (make-high-def STREAM1) (make-streaming "PC" false true))
+(check-expect (make-high-def STREAM2) (make-streaming "PC" false false))
 
 ;; 5. 
 
@@ -65,6 +113,11 @@
                           true
                           (contains-all-numbers? (rest alos)))]))
 
+(check-expect (contains-all-numbers? empty) false)
+(check-expect (contains-all-numbers? STRING1) true)
+(check-expect (contains-all-numbers? (cons "dog" (cons "cat" empty))) false)
+(check-expect (contains-all-numbers? (cons "34" (cons "1" empty))) true)
+ 
 ;; 6.
 
 (define STRINGTEST (cons "testX" (cons "XjxXxX" empty)))
@@ -73,10 +126,19 @@
   (cond [(empty? alos) 0]
         [else (+ (x-counter (explode (first alos))) (count-x (rest alos)))]))
 
+(check-expect (count-x empty) 0)
+(check-expect (count-x STRINGTEST) 6)
+(check-expect (count-x (cons "apple" (cons "dog" empty))) 0)
+
 (define (x-counter input)
   (cond [(empty? input) 0]
         [(or (string-contains? "x" (first input)) (string-contains? "X" (first input))) (+ 1 (x-counter (rest input)))]
         [else (x-counter (rest input))]))
+
+(check-expect (x-counter empty) 0)
+(check-expect (x-counter STRINGTEST) 2)
+(check-expect (x-counter (cons "apple" (cons "dog" empty))) 0)
+(check-expect (x-counter (cons "applex" (cons "dog" empty))) 1)
 
 (count-x STRINGTEST)
 
@@ -89,13 +151,19 @@
 (define (lengths-of-strings1 alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (cons (string-length (first alos)) (lengths-of-strings (rest alos)))]))
+        
+
+
   
 (define (lengths-of-strings alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings1 (rest alos))))]))
+
+(check-expect (lengths-of-strings StringL1) (make-ListOfNatural (cons 3 (cons 4 ' ()))))
   
 
-(cons "add" (cons "bear" empty))
+
+(define StringL1 (cons "add" (cons "bear" empty)))
 
 
 
