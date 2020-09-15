@@ -39,9 +39,14 @@
 (define-struct plan (type))
 
 (define PLAN1 DVD1)
+(define PLAN2 STREAM1)
 
 ;;----------------------------------------------------------------------------------------
 ;; 2.
+
+;; plan is one of:
+;; - streaming
+;; - dvd
 
 ; ;; DVD-fcn:  DVD -> ...
 ; ;; ...
@@ -136,7 +141,8 @@
 (check-expect (contains-all-numbers? empty) false)
 (check-expect (contains-all-numbers? STRING1) true)
 (check-expect (contains-all-numbers? (cons "dog" (cons "cat" empty))) false)
-(check-expect (contains-all-numbers? (cons "34" (cons "1" empty))) true)
+(check-expect (contains-all-numbers? (cons "34t" (cons "1" empty))) true)
+(check-expect (contains-all-numbers? (cons "34t" (cons "1" empty))) true)
 
 ;;----------------------------------------------------------------------------------------
 ;; 6.
@@ -189,7 +195,6 @@
 (define (lengths-of-strings alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (cons (string-length (first alos)) (lengths-of-strings (rest alos)))]))
-        
 
 (check-expect (lengths-of-strings StringL1) (cons 3 (cons 4 ' ())))
 
