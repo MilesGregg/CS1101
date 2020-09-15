@@ -170,23 +170,28 @@
 ;;----------------------------------------------------------------------------------------
 ;; 7.
 
-(define-struct ListOfNatural (list))
+;; a ListOfNatural is one of
+;;     empty
+;;     (cons Natural ListOfNatural)
 
+; ;; lon-fcn:  ListOfNatural ->
+; ;;
+; (define (lon-fcn alos)
+;   (cond [(empty? alos)  (...)      ]
+;         [(cons? alos)   (... (first alos)
+;                              (lon-fcn (rest alos)))]))
+
+(define list-N1 (cons 1 (cons 3 (cons 100 empty))))
 (define StringL1 (cons "add" (cons "bear" empty)))
 
 ;;lengths-of-strings1: alos -> alon
 ;;consumes a list of strings then produces a list with their lengths
-(define (lengths-of-strings1 alos)
+(define (lengths-of-strings alos)
   (cond [(empty? alos) empty]
         [(cons? alos) (cons (string-length (first alos)) (lengths-of-strings (rest alos)))]))
         
-;;lengths-of-strings: alos -> ListOfNatural
-;;consumes a list of strings then produces a ListOfNatural with their string lengths
-(define (lengths-of-strings alos)
-  (cond [(empty? alos) empty]
-        [(cons? alos) (make-ListOfNatural (cons (string-length (first alos)) (lengths-of-strings1 (rest alos))))]))
 
-(check-expect (lengths-of-strings StringL1) (make-ListOfNatural (cons 3 (cons 4 ' ()))))
+(check-expect (lengths-of-strings StringL1) (cons 3 (cons 4 ' ())))
 
 
 
