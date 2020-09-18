@@ -51,7 +51,7 @@
 ;; (cons volunteer-org ListOfVolunteerOrg)
 
 (define ORGS (cons ORG1 (cons (make-volunteer-org "animal shelter" "blank" 13 true false 8 10 (cons "english" empty)) empty)))
-(define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
+(define ORGS1 (cons ORG3 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
 
 ;; lov-fcn:  ListOfVolunteerOrg ->
 ; 
@@ -62,31 +62,18 @@
 
 ;; 5
 
-(define (hs-eligble? a-volunteerorg)
-  (>= 13 (volunteer-org-age a-volunteerorg)))
-
 ;; count-hs-eligible: ListOfVolunteerOrg -> Natural
 ;; Consumes ListOfVolunteerOrg and returns the number of orgs with highschool eligibility (13 years and older)
+
+(define (hs-eligble a-volunteerorg)
+  (if (>= 13 (volunteer-org-age a-volunteerorg))
+      true
+      false))
+
 (define (count-hs-eligble alov)
   (cond [(empty? alov) 0]
-        [(cons? alov) (if (hs-eligble? (first alov))
+        [(cons? alov) (if (hs-eligble (first alov))
                           (+ 1 (count-hs-eligble (rest alov)))
                           (count-hs-eligble (rest alov)))]))
-
-
-
-;; 6  ---------------CHECK THIS------------------
-
-(define (has-license? a-volunteerorg)
-  (volunteer-org-license a-volunteerorg))
-
-;; list-license-training: ListOfVolunteerOrg Natural -> ListOfVolunteerOrg
-;; Consumes ListOfVolunteerOrg and a Natural then returns a ListOfVolunteerOrg only contains those from the orginal list that require volunteers to be licensed
-(define (list-license-training alov hours-of-training)
-  (cond [(empty? alov) empty]
-        [(cons? alov) (if (and (has-license? (first alov)) (< (volunteer-org-training (first alov)) hours-of-training))
-                         (cons (first alov) (cons (list-license-training (rest alov) hours-of-training) empty))
-                         (list-license-training (rest alov) hours-of-training))]))
-
-
+  
                     
