@@ -5,7 +5,7 @@
 
 (define-struct volunteer-org (kind name age consent license training hours languages))
 
-(define ORG1 (make-volunteer-org "animal shelter" "blank" 16 true false 8 10 (cons "english" (cons "spanish" empty))))
+(define ORG1 (make-volunteer-org "animal shelter" "blank" 16 true false 8 10 (cons "spanish" (cons "english" empty))))
 (define ORG2 (make-volunteer-org "nursing home" "blank1" 18 false true 24 15 (cons "english" (cons "chinese" (cons "spanish" empty)))))
 (define ORG3 (make-volunteer-org "soup kitchen" "blank2" 10 true false 4 5 (cons "english" empty)))
 ;; a Volunteer-org is a (make-volunteer-org String String Natural Boolean Boolean Natural Natural alos)
@@ -50,8 +50,9 @@
 ;; empty
 ;; (cons volunteer-org ListOfVolunteerOrg)
 
-(define ORGS (cons ORG1 (cons (make-volunteer-org "animal shelter" "blank" 13 true false 8 10 (cons "english" empty)) empty)))
+(define ORGS (cons ORG1 (cons (make-volunteer-org "animal shelter" "blank" 13 true false 8 10 (cons "spanish" empty)) empty)))
 (define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
+(define ORGS2 (cons ORG3 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
 
 ;; lov-fcn:  ListOfVolunteerOrg ->
 ; 
@@ -90,12 +91,43 @@
 
 ;; 7
 
-;;languages-spoken : ListOfVolunteerOrg -> ListOfString
+;; languages-spoken : ListOfVolunteerOrg -> ListOfString
 ;; consumes a list of volunteerorg and produces a list of all the languages spoken by the clients of organizations
-
 (define (languages-spoken alov)
   (cond [(empty? alov) empty]
         [(cons? alov) (cons (volunteer-org-languages (first alov)) (languages-spoken (rest alov)))]))
+
+;; 8
+
+(define (check-spanish? volunteer-org)
+  (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
+        [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
+
+(define (need-spanish-speakers alov)
+  (cond [(empty? alov) empty]
+        [(cons? alov) (if (check-spanish? (first alov))
+                          (cons (first alov) (cons (need-spanish-speakers (rest alov)) empty))
+                          (need-spanish-speakers (rest alov)))]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                     
