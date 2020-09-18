@@ -88,5 +88,14 @@
                          (cons (first alov) (cons (list-license-training (rest alov) hours-of-training) empty))
                          (list-license-training (rest alov) hours-of-training))]))
 
+;; 7
+
+;;languages-spoken : ListOfVolunteerOrg -> ListOfString
+;; consumes a list of volunteerorg and produces a list of all the languages spoken by the clients of organizations
+
+(define (languages-spoken alov)
+  (cond [(empty? alov) empty]
+        [(cons? alov) (cons (volunteer-org-languages (first alov)) (languages-spoken (rest alov)))]))
+
 
                     
