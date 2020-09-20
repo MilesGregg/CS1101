@@ -3,6 +3,8 @@
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname nguyen-a-gregg-m-hw3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
 
+;;1
+
 (define-struct volunteer-org (kind name age consent license training hours languages))
 
 (define ORG1 (make-volunteer-org "animal shelter" "blank" 16 true false 8 10 (cons "spanish" (cons "english" empty))))
@@ -19,7 +21,7 @@
 ;;    hours is the minimum hours of work required each week Natural
 ;;    languages is a list of languages spoken by clients alos
 
-
+;; 2
 
 ; ;; volunteer-org-fcn:  volunteer-org ->
 ; ;;
@@ -45,6 +47,7 @@
 ;         [(cons? alos)   (...        (string-fcn (first alos))
 ;                                     (los-fcn (rest alos)))]))
 
+;;3
 
 ;; a ListOfVolunteerOrg is one of
 ;; empty
@@ -54,6 +57,8 @@
 (define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
 (define ORGS2 (cons ORG3 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
 
+;;4
+
 ;; lov-fcn:  ListOfVolunteerOrg ->
 ; 
 ; (define (lov-fcn alov)
@@ -62,9 +67,13 @@
 ;                                     (lov-fcn (rest alov)))]))
 
 ;; 5
-
+;; hs-eligble?: volunteer-org -> Boolean
+;; Consumes a volunteer-org and returns true if the minimum age is 13 and younger
 (define (hs-eligble? a-volunteerorg)
   (>= 13 (volunteer-org-age a-volunteerorg)))
+
+(check-expect (hs-eligble? ORG1) false)
+(check-expect (hs-eligble? ORG3) true)
 
 ;; count-hs-eligible: ListOfVolunteerOrg -> Natural
 ;; Consumes ListOfVolunteerOrg and returns the number of orgs with highschool eligibility (13 years and older)
@@ -74,21 +83,43 @@
                           (+ 1 (count-hs-eligble (rest alov)))
                           (count-hs-eligble (rest alov)))]))
 
+(check-expect (count-hs-eligble empty) 0)
+(check-expect (count-hs-eligble ORGS) 1)
+(check-expect (count-hs-eligble ORGS2) 2)
 
 
 ;; 6  ---------------CHECK THIS------------------
 
+;; has-license?: volunteer-org -> Boolean
+;; Consumes a volunteer org and returns true if voulnteer org requires license
 (define (has-license? a-volunteerorg)
   (volunteer-org-license a-volunteerorg))
+(check-expect (has-license? ORG1) false)
+(check-expect (has-license? ORG2) true)
 
 ;; list-license-training: ListOfVolunteerOrg Natural -> ListOfVolunteerOrg
 ;; Consumes ListOfVolunteerOrg and a Natural then returns a ListOfVolunteerOrg only contains those from the orginal list that require volunteers to be licensed
+
+
 (define (list-license-training alov hours-of-training)
   (cond [(empty? alov) empty]
         [(cons? alov) (if (and (has-license? (first alov)) (< (volunteer-org-training (first alov)) hours-of-training))
-                         (cons (first alov) (cons (list-license-training (rest alov) hours-of-training) empty))
-                         (list-license-training (rest alov) hours-of-training))]))
+                          (cons (first alov) (list-license-training (rest alov) hours-of-training))
+                          (list-license-training (rest alov) hours-of-training))]))
 
+(check-expect (list-license-training empty 15) empty)
+(check-expect (list-license-training ORGS 15) empty)
+(check-expect (list-license-training ORGS1 25)(cons
+                                               (make-volunteer-org
+                                                "nursing home"
+                                                "blank1"
+                                                18
+                                                #false
+                                                #true
+                                                24
+                                                15
+                                                (cons "english" (cons "chinese" (cons "spanish" '()))))
+                                               '()))
 ;; 7
 
 ;; languages-spoken : ListOfVolunteerOrg -> ListOfString
@@ -97,18 +128,33 @@
   (cond [(empty? alov) empty]
         [(cons? alov) (cons (volunteer-org-languages (first alov)) (languages-spoken (rest alov)))]))
 
+(check-expect (languages-spoken empty) empty)
+(check-expect (languages-spoken ORGS1) (cons
+                                        (cons "english" (cons "chinese" (cons "spanish" '())))
+                                        (cons (cons "english" '()) '())))
 ;; 8
-
+;; check-spanish?: volunteer-org -> Boolean
+;; Consumes a volunteer org and returns true if it contains spanish as a language
 (define (check-spanish? volunteer-org)
   (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
         [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
 
+(check-expect (check-spanish? ORG1) true)
+(check-expect (check-spanish? ORG3) false)
+
+;; need-spanish-speakers: ListOfVoulunteerOrg -> ListOfVolunteerOrg
+;; Consumes a ListOfVolunteerOrg and returns a ListOfVolunteerOrg with only Orgs that list spanish as a language
 (define (need-spanish-speakers alov)
   (cond [(empty? alov) empty]
         [(cons? alov) (if (check-spanish? (first alov))
                           (cons (first alov) (cons (need-spanish-speakers (rest alov)) empty))
                           (need-spanish-speakers (rest alov)))]))
 
+(check-expect (need-spanish-speakers empty) empty)
+(check-expect (need-spanish-speakers ORGS) (cons
+                                            (make-volunteer-org "animal shelter" "blank" 16 #true #false 8 10 (cons "spanish" (cons "english" '())))
+                                            (cons (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) (cons '() '())) '())))
+(check-expect (need-spanish-speakers ORGS2) empty)
 
 
 
@@ -130,4 +176,6 @@
 
 
 
-                    
+
+
+              
