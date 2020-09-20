@@ -144,16 +144,17 @@
 
 ;; need-spanish-speakers: ListOfVoulunteerOrg -> ListOfVolunteerOrg
 ;; Consumes a ListOfVolunteerOrg and returns a ListOfVolunteerOrg with only Orgs that list spanish as a language
+
 (define (need-spanish-speakers alov)
   (cond [(empty? alov) empty]
         [(cons? alov) (if (check-spanish? (first alov))
-                          (cons (first alov) (cons (need-spanish-speakers (rest alov)) empty))
+                          (cons (first alov) (need-spanish-speakers (rest alov)))
                           (need-spanish-speakers (rest alov)))]))
 
 (check-expect (need-spanish-speakers empty) empty)
 (check-expect (need-spanish-speakers ORGS) (cons
                                             (make-volunteer-org "animal shelter" "blank" 16 #true #false 8 10 (cons "spanish" (cons "english" '())))
-                                            (cons (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) (cons '() '())) '())))
+                                            (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) '())))
 (check-expect (need-spanish-speakers ORGS2) empty)
 
 
@@ -178,4 +179,3 @@
 
 
 
-              
