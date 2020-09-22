@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname nguyen-a-gregg-m-hw3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname nguyen-a-gregg-m-hw3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
 
 ;;----------------------------------------------------------------------------------------
@@ -25,8 +25,7 @@
 (define ORG1 (make-volunteer-org "animal shelter" "blank" 16 true false 8 10 (cons "spanish" (cons "english" empty))))
 (define ORG2 (make-volunteer-org "nursing home" "blank1" 18 false true 24 15 (cons "english" (cons "chinese" (cons "spanish" empty)))))
 (define ORG3 (make-volunteer-org "soup kitchen" "blank2" 10 true false 4 5 (cons "english" empty)))
-(define ORG4 (make-volunteer-org "soup kitchen" "blank2" 10 true true 4 5 (cons "english" empty)))
-
+(define ORG4 (make-volunteer-org "soup kitchen" "blank2" 10 true true 4 5 (cons "english" (cons "german" empty))))
 
 ;;----------------------------------------------------------------------------------------
 ;; 2
@@ -61,7 +60,7 @@
 (define ORGS (cons ORG1 (cons (make-volunteer-org "animal shelter" "blank" 13 true false 8 10 (cons "spanish" empty)) empty)))
 (define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
 (define ORGS2 (cons ORG3 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
-(define ORGS3 (cons ORG4 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true true 3 5 (cons "english" empty)) empty)))
+(define ORGS3 (cons ORG4 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true true 3 5 (cons "german" (cons "french" empty))) empty)))
 
 ;;----------------------------------------------------------------------------------------
 ;;4
@@ -96,7 +95,7 @@
 (check-expect (count-hs-eligble ORGS2) 2)
 
 ;;----------------------------------------------------------------------------------------
-;; 6  ---------------CHECK THIS------------------
+;; 6 
 
 ;; has-license?: volunteer-org -> Boolean
 ;; Consumes a volunteer org and returns true if voulnteer org requires license
@@ -140,6 +139,8 @@
 
 (check-expect (languages-spoken empty) empty)
 (check-expect (languages-spoken ORGS1) (cons "english" (cons "chinese" (cons "spanish" (cons "english" empty)))))
+(check-expect (languages-spoken ORGS2) (cons "english" (cons "english" empty)))
+(check-expect (languages-spoken ORGS3) (cons "english" (cons "german" (cons "german" (cons "french" empty)))))
 
 ;;----------------------------------------------------------------------------------------
 ;; 8
@@ -150,14 +151,22 @@
   (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
         [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
 
+(define (check-spanish?2 alos)
+  (cond [(empty? alos) false]
+        [(cons? alos) (if (string=? "spanish" (first alos))
+                          true
+                          (check-spanish?2 (rest alos)))]))
+
 (check-expect (check-spanish? ORG1) true)
+(check-expect (check-spanish? ORG2) true)
 (check-expect (check-spanish? ORG3) false)
+(check-expect (check-spanish? ORG4) false)
 
 ;; need-spanish-speakers: ListOfVoulunteerOrg -> ListOfVolunteerOrg
 ;; Consumes a ListOfVolunteerOrg and returns a ListOfVolunteerOrg with only Orgs that list spanish as a language
 (define (need-spanish-speakers alov)
   (cond [(empty? alov) empty]
-        [(cons? alov) (if (check-spanish? (first alov))
+        [(cons? alov) (if (check-spanish?2 (volunteer-org-languages (first alov)))
                           (cons (first alov) (need-spanish-speakers (rest alov)))
                           (need-spanish-speakers (rest alov)))]))
 
