@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname nguyen-a-gregg-m-hw3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname nguyen-a-gregg-m-hw3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
 
 ;;----------------------------------------------------------------------------------------
@@ -135,12 +135,10 @@
 ;; consumes a list of volunteerorg and produces a list of all the languages spoken by the clients of organizations
 (define (languages-spoken alov)
   (cond [(empty? alov) empty]
-        [(cons? alov) (cons (volunteer-org-languages (first alov)) (languages-spoken (rest alov)))]))
+        [(cons? alov) (append (volunteer-org-languages (first alov)) (languages-spoken (rest alov)))]))
 
 (check-expect (languages-spoken empty) empty)
-(check-expect (languages-spoken ORGS1) (cons
-                                        (cons "english" (cons "chinese" (cons "spanish" empty)))
-                                        (cons (cons "english" empty) empty)))
+(check-expect (languages-spoken ORGS1) (cons "english" (cons "chinese" (cons "spanish" (cons "english" empty)))))
 
 ;;----------------------------------------------------------------------------------------
 ;; 8
