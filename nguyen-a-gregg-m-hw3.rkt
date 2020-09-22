@@ -144,29 +144,29 @@
 
 ;;----------------------------------------------------------------------------------------
 ;; 8
+;; WRONG ONE
+;(define (check-spanish? volunteer-org)
+;  (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
+;        [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
 
 ;; check-spanish?: volunteer-org -> Boolean
 ;; Consumes a volunteer org and returns true if it contains spanish as a language
-(define (check-spanish? volunteer-org)
-  (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
-        [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
-
-(define (check-spanish?2 alos)
+(define (check-spanish? alos)
   (cond [(empty? alos) false]
         [(cons? alos) (if (string=? "spanish" (first alos))
                           true
-                          (check-spanish?2 (rest alos)))]))
+                          (check-spanish? (rest alos)))]))
 
-(check-expect (check-spanish? ORG1) true)
-(check-expect (check-spanish? ORG2) true)
-(check-expect (check-spanish? ORG3) false)
-(check-expect (check-spanish? ORG4) false)
+(check-expect (check-spanish? (volunteer-org-languages ORG1)) true)
+(check-expect (check-spanish? (volunteer-org-languages ORG2)) true)
+(check-expect (check-spanish? (volunteer-org-languages ORG3)) false)
+(check-expect (check-spanish? (volunteer-org-languages ORG4)) false)
 
 ;; need-spanish-speakers: ListOfVoulunteerOrg -> ListOfVolunteerOrg
 ;; Consumes a ListOfVolunteerOrg and returns a ListOfVolunteerOrg with only Orgs that list spanish as a language
 (define (need-spanish-speakers alov)
   (cond [(empty? alov) empty]
-        [(cons? alov) (if (check-spanish?2 (volunteer-org-languages (first alov)))
+        [(cons? alov) (if (check-spanish? (volunteer-org-languages (first alov)))
                           (cons (first alov) (need-spanish-speakers (rest alov)))
                           (need-spanish-speakers (rest alov)))]))
 
