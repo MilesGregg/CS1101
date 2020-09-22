@@ -18,10 +18,15 @@
 ;;    languages is a list of languages spoken by clients alos
 (define-struct volunteer-org (kind name age consent license training hours languages))
 
+;; a ListOfString is one of
+;;    empty
+;;    (cons string ListOfString)
+
 (define ORG1 (make-volunteer-org "animal shelter" "blank" 16 true false 8 10 (cons "spanish" (cons "english" empty))))
 (define ORG2 (make-volunteer-org "nursing home" "blank1" 18 false true 24 15 (cons "english" (cons "chinese" (cons "spanish" empty)))))
 (define ORG3 (make-volunteer-org "soup kitchen" "blank2" 10 true false 4 5 (cons "english" empty)))
 (define ORG4 (make-volunteer-org "soup kitchen" "blank2" 10 true true 4 5 (cons "english" empty)))
+
 
 ;;----------------------------------------------------------------------------------------
 ;; 2
@@ -38,10 +43,6 @@
 ;        (volunteer-org-hours a-volunteer-org)
 ;        (volunteer-org-languages volunteer-org)))
 
-;; CHECK ON  THIS
-;; a ListOfString is one of
-;;    empty
-;;    (cons Course ListOfString) COURSE ALSO
 
 ; ;; los-fcn:  ListOfString ->
 ; ;;
@@ -163,5 +164,5 @@
 (check-expect (need-spanish-speakers empty) empty)
 (check-expect (need-spanish-speakers ORGS) (cons
                                             (make-volunteer-org "animal shelter" "blank" 16 #true #false 8 10 (cons "spanish" (cons "english" empty)))
-                                            (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) '())))
+                                           (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) '())))
 (check-expect (need-spanish-speakers ORGS2) empty)
