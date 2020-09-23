@@ -42,7 +42,6 @@
 ;        (volunteer-org-hours a-volunteer-org)
 ;        (volunteer-org-languages volunteer-org)))
 
-
 ; ;; los-fcn:  ListOfString ->
 ; ;;
 ; (define (los-fcn alos)
@@ -54,13 +53,13 @@
 ;; 3
 
 ;; a ListOfVolunteerOrg is one of
-;; empty
-;; (cons volunteer-org ListOfVolunteerOrg)
+;;    empty
+;;    (cons volunteer-org ListOfVolunteerOrg)
 
 (define ORGS (cons ORG1 (cons (make-volunteer-org "animal shelter" "blank" 13 true false 8 10 (cons "spanish" empty)) empty)))
-(define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
-(define ORGS2 (cons ORG3 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
-(define ORGS3 (cons ORG4 (cons (make-volunteer-org "soup kitchen" "blank2" 11 true true 3 5 (cons "german" (cons "french" empty))) empty)))
+(define ORGS1 (cons ORG2 (cons (make-volunteer-org "soup kitchen1" "blank2" 11 true false 4 5 (cons "english" empty)) empty)))
+(define ORGS2 (cons ORG3 (cons (make-volunteer-org "soup kitchen2" "blank3" 11 true false 4 5 (cons "english" empty)) empty)))
+(define ORGS3 (cons ORG4 (cons (make-volunteer-org "soup kitchen3" "blank4" 11 true true 3 5 (cons "german" (cons "french" empty))) empty)))
 
 ;;----------------------------------------------------------------------------------------
 ;;4
@@ -74,6 +73,7 @@
 
 ;;----------------------------------------------------------------------------------------
 ;; 5
+
 ;; hs-eligble?: volunteer-org -> Boolean
 ;; Consumes a volunteer-org and returns true if the minimum age is 13 and younger
 (define (hs-eligble? a-volunteerorg)
@@ -144,13 +144,9 @@
 
 ;;----------------------------------------------------------------------------------------
 ;; 8
-;; WRONG ONE
-;(define (check-spanish? volunteer-org)
-;  (cond [(empty? (volunteer-org-languages volunteer-org)) empty]
-;        [(cons? (volunteer-org-languages volunteer-org)) (string=? "spanish" (first (volunteer-org-languages volunteer-org)))]))
 
-;; check-spanish?: volunteer-org -> Boolean
-;; Consumes a volunteer org and returns true if it contains spanish as a language
+;; check-spanish?: alos -> Boolean
+;; Consumes a alos and returns true if it contains spanish as a language
 (define (check-spanish? alos)
   (cond [(empty? alos) false]
         [(cons? alos) (if (string=? "spanish" (first alos))
@@ -173,6 +169,6 @@
 (check-expect (need-spanish-speakers empty) empty)
 (check-expect (need-spanish-speakers ORGS) (cons
                                             (make-volunteer-org "animal shelter" "blank" 16 #true #false 8 10 (cons "spanish" (cons "english" empty)))
-                                           (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" '())) '())))
+                                           (cons (make-volunteer-org "animal shelter" "blank" 13 #true #false 8 10 (cons "spanish" empty)) empty)))
 (check-expect (need-spanish-speakers ORGS2) empty)
-(check-expect (need-spanish-speakers ORGS1) (cons (make-volunteer-org "nursing home" "blank1" 18 #false #true 24 15 (cons "english" (cons "chinese" (cons "spanish" '())))) '()))
+(check-expect (need-spanish-speakers ORGS1) (cons (make-volunteer-org "nursing home" "blank1" 18 #false #true 24 15 (cons "english" (cons "chinese" (cons "spanish" empty)))) empty))
