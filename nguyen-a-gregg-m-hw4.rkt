@@ -28,9 +28,9 @@
 ; 2
 
 (define item1 (make-item 54503 "A toy" 2 5.00))
-(define item2 (make-item 42013 "A brick" 4 5.00))
-(define item3 (make-item 92503 "A stick" 5 5.00))
-(define item4 (make-item 60240 "A computer" 5 5.00))
+(define item2 (make-item 42013 "A brick" 2 5.00))
+(define item3 (make-item 92503 "A stick" 3 5.00))
+(define item4 (make-item 60240 "A computer" 1 5.00))
 
 (define order1 (make-order 10 "Paul" 5002200053026 (list item1 item2)
                            (make-order 8 "Bob" 5002200053026 (list item2 item3)
@@ -42,7 +42,11 @@
                                        false)
                            (make-order 12 "Greg" 555043135435 (list item3 item1)
                                        false
-                                       false)))
+                                       (make-order 18 "Aaron" 555043135425 (list item1 item2 item3)
+                                                   (make-order 16 "Karen" 555043135445 (list item2 item4)
+                                                               false
+                                                               false)
+                                                   false))))
 
 ; 3
 
@@ -92,11 +96,18 @@
   (cond [(boolean? atree) -1]
         [(order? atree) (if (< order-number (order-order-number atree))
                             (if (= order-number (order-order-number atree))
-                                5
+                                (add-cost (order-aloi atree))
                                 (order-cost (order-left atree) order-number))
-                            -1)]))
+                            (if (= order-number (order-order-number atree))
+                                (add-cost (order-aloi atree))
+                                (order-cost (order-right atree) order-number)))]))
 
-(order-cost order1 3)
+(check-expect (order-cost order1 3) 15)
+(check-expect (order-cost order1 16) 15)
+(check-expect (order-cost order1 18) 35)
+(check-expect (order-cost order1 8) 25)
+(check-expect (order-cost order1 5) 25)
+(check-expect (order-cost order1 4) -1)
 
 ;(check-expect (order-cost order1 3) -1)
 ;; (order-left atree)
