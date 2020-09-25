@@ -139,23 +139,12 @@
 
 (define (remove-item-from-all-orders atree item-num)
   (cond [(boolean? atree) atree]
-        [(order? atree) (remove-item (order-aloi atree) item-num)]))
-  
-#;(define (remove-item loi item-num)
-  (cond [(empty? loi) empty]
-        [(cons? loi) (if (= item-num (item-item-number (first loi)))
-                         (remove-item-from-all-orders (rest loi) item-num)
-                         (cons (item-item-number (first loi)) (remove-item-from-all-orders (rest loi) item-num)))]))
+        [(order? atree) (make-order (order-order-number atree)
+                                    (order-name atree)
+                                    (order-credit-card atree)
+                                    (remove-item (order-aloi atree) item-num)
+                                    (remove-item-from-all-orders (order-left atree) item-num)
+                                    (remove-item-from-all-orders (order-right atree) item-num))]))
 
- #;(define (tree-fcn atree)
-   (cond [(boolean? atree) (...)]
-         [(order? atree) (... (order-order-number atree)
-                               (order-name atree)
-                               (order-credit-card atree)
-                               (order-aloi atree)
-                               (tree-fcn (order-right atree))
-                               (tree-fcn (order-left atree)))]))
-
-(check-expect (remove-item-from-all-orders order1 54503) (list 42013))
 
 
