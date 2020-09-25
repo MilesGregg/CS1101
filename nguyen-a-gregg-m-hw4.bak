@@ -129,19 +129,6 @@
                                        (node-left a-tree)
                                        (insert a-node (node-right a-tree))))]))
 
-;; 5
-
-(define (remove-item loi item-num)
-  (cond [(empty? loi) empty]
-        [(cons? loi) (if (= item-num (item-item-number (first loi)))
-                         (remove-item (rest loi) item-num)
-                         (cons (item-item-number (first loi)) (remove-item (rest loi) item-num)))]))
-
-(define (remove-item-from-all-orders atree item-num)
-  (cond [(boolean? atree) atree]
-        [(order? atree) (
-  
-
 
 
 
