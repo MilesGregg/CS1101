@@ -160,28 +160,22 @@
 
 ;; 7
 
-(define (add-new-order atree order-number customer-name credit-card-number aloi)
-  (cond [(boolean? atree) (make-order order-number customer-name credit-card-number aloi false false)]
-        [(order? atree) (if (>  (order-order-number (make-order order-number customer-name credit-card-number aloi false false)) (order-order-number atree))
+(define (add-new-order atree a-order-number a-customer-name a-credit-card-number a-aloi)
+  (cond [(boolean? atree) (make-order a-order-number a-customer-name a-credit-card-number a-aloi false false)]
+        [(order? atree) (if (< a-order-number (order-order-number atree))
                             (make-order (order-order-number atree)
                                         (order-name atree)
                                         (order-credit-card atree)
                                         (order-aloi atree)
-                                        (add-new-order (order-left (make-order order-number customer-name credit-card-number aloi false false)) order-number customer-name credit-card-number aloi)
-                                       (order-right atree))
+                                        (add-new-order (order-left atree) a-order-number a-customer-name a-credit-card-number a-aloi)
+                                        (order-right atree))
                             
                             (make-order (order-order-number atree)
                                         (order-name atree)
                                         (order-credit-card atree)
                                         (order-aloi atree)
                                         (order-left atree)
-                                        (add-new-order (order-right (make-order order-number customer-name credit-card-number aloi false false)) order-number customer-name credit-card-number aloi)))]))
-
-
-                            
-                            
-                            
-                                
-                                
-;(add-new-order order1 2 "jill" 1231219902 (list item1))                            
+                                        (add-new-order (order-right atree) a-order-number a-customer-name a-credit-card-number a-aloi)))]))
+     
+(add-new-order order1 2 "jill" 1231219902 (list item1))                            
 (define ORDERJ (make-order 20 "jill" 1231219902 (list item1) false false))
