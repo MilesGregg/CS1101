@@ -170,3 +170,26 @@
                              (append
                                     (gather-blue-eyed (person-mother atree))
                                     (gather-blue-eyed (person-father atree))))]))
+
+;; 7
+
+(define (add-new-order order-number customer-name credit-card-number aloi atree)
+  (cond [(boolean? atree) atree]
+        [(order? atree) (if (>  (order-order-number (make-order order-number customer-name credit-card-number aloi false false)) (order-order-number atree))
+                            (make-order (order-order-number atree)
+                                        (order-name atree)
+                                        (order-credit-card atree)
+                                        (order-aloi atree)
+                                        (make-order order-number customer-name credit-card-number aloi false false)
+                                       (order-right atree))
+                            
+                            (make-order (order-order-number atree)
+                                        (order-name atree)
+                                        (order-credit-card atree)
+                                        (order-aloi atree)
+                                        (order-left atree)
+                                       (make-order order-number customer-name credit-card-number aloi false false)))]))
+                                
+                                
+(add-new-order 2 "jill" 1231219902 (list item1) order1)                            
+(define ORDERJ (make-order 20 "jill" 1231219902 (list item1) false false))
