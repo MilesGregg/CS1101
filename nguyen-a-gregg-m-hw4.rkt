@@ -169,7 +169,6 @@
                                         (order-aloi atree)
                                         (add-new-order (order-left atree) a-order-number a-customer-name a-credit-card-number a-aloi)
                                         (order-right atree))
-                            
                             (make-order (order-order-number atree)
                                         (order-name atree)
                                         (order-credit-card atree)
