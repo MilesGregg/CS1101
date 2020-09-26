@@ -146,5 +146,27 @@
                                     (remove-item-from-all-orders (order-left atree) item-num)
                                     (remove-item-from-all-orders (order-right atree) item-num))]))
 
+;; 6
 
+#;(define (list-sorted-order-numbers atree)
+  (cond [(boolean? atree) empty]
+        [(order? atree) (append (list (list-sorted-order-numbers (order-left atree)) (order-order-number atree))
+                                (list (list-sorted-order-numbers (order-right atree))))]))
 
+(define (list-sorted-order-numbers atree)
+  (cond [(boolean? atree) empty]
+        [(order? atree) (append (list (list-sorted-order-numbers (order-left atree)) (order-order-number atree))
+                                (list (list-sorted-order-numbers (order-right atree))))]))
+
+(list-sorted-order-numbers order1)
+
+#;(define (gather-blue-eyed atree)
+  (cond [(boolean? atree) empty]
+        [(person? atree) (if (string=? "blue" (person-eye atree))
+                             (cons (person-name atree)
+                                   (append
+                                    (gather-blue-eyed (person-mother atree))
+                                    (gather-blue-eyed (person-father atree))))
+                             (append
+                                    (gather-blue-eyed (person-mother atree))
+                                    (gather-blue-eyed (person-father atree))))]))
