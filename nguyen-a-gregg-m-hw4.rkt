@@ -46,7 +46,9 @@
                                                    (make-order 16 "Karen" 555043135445 (list item2 item4)
                                                                false
                                                                false)
-                                                   false))))
+                                                   (make-order 20 "Jack" 555043135415 (list item1 item2)
+                                                               false
+                                                               false)))))
 
 ; 3
 
@@ -148,28 +150,13 @@
 
 ;; 6
 
-#;(define (list-sorted-order-numbers atree)
-  (cond [(boolean? atree) empty]
-        [(order? atree) (append (list (list-sorted-order-numbers (order-left atree)) (order-order-number atree))
-                                (list (list-sorted-order-numbers (order-right atree))))]))
-
 (define (list-sorted-order-numbers atree)
   (cond [(boolean? atree) empty]
-        [(order? atree) (append (list (list-sorted-order-numbers (order-left atree)) (order-order-number atree))
-                                (list (list-sorted-order-numbers (order-right atree))))]))
+        [(order? atree) (append (list-sorted-order-numbers (order-left atree))
+                                (cons (order-order-number atree)
+                                      (list-sorted-order-numbers (order-right atree))))]))
 
 (list-sorted-order-numbers order1)
-
-#;(define (gather-blue-eyed atree)
-  (cond [(boolean? atree) empty]
-        [(person? atree) (if (string=? "blue" (person-eye atree))
-                             (cons (person-name atree)
-                                   (append
-                                    (gather-blue-eyed (person-mother atree))
-                                    (gather-blue-eyed (person-father atree))))
-                             (append
-                                    (gather-blue-eyed (person-mother atree))
-                                    (gather-blue-eyed (person-father atree))))]))
 
 ;; 7
 
@@ -196,5 +183,5 @@
                             
                                 
                                 
-(add-new-order order1 2 "jill" 1231219902 (list item1))                            
+;(add-new-order order1 2 "jill" 1231219902 (list item1))                            
 (define ORDERJ (make-order 20 "jill" 1231219902 (list item1) false false))
