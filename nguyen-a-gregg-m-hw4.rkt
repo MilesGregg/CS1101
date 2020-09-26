@@ -173,14 +173,14 @@
 
 ;; 7
 
-(define (add-new-order order-number customer-name credit-card-number aloi atree)
-  (cond [(boolean? atree) atree]
+(define (add-new-order atree order-number customer-name credit-card-number aloi)
+  (cond [(boolean? atree) (make-order order-number customer-name credit-card-number aloi false false)]
         [(order? atree) (if (>  (order-order-number (make-order order-number customer-name credit-card-number aloi false false)) (order-order-number atree))
                             (make-order (order-order-number atree)
                                         (order-name atree)
                                         (order-credit-card atree)
                                         (order-aloi atree)
-                                        (make-order order-number customer-name credit-card-number aloi false false)
+                                        (add-new-order (order-left (make-order order-number customer-name credit-card-number aloi false false)) order-number customer-name credit-card-number aloi)
                                        (order-right atree))
                             
                             (make-order (order-order-number atree)
@@ -188,8 +188,13 @@
                                         (order-credit-card atree)
                                         (order-aloi atree)
                                         (order-left atree)
-                                       (make-order order-number customer-name credit-card-number aloi false false)))]))
+                                        (add-new-order (order-right (make-order order-number customer-name credit-card-number aloi false false)) order-number customer-name credit-card-number aloi)))]))
+
+
+                            
+                            
+                            
                                 
                                 
-(add-new-order 2 "jill" 1231219902 (list item1) order1)                            
+(add-new-order order1 2 "jill" 1231219902 (list item1))                            
 (define ORDERJ (make-order 20 "jill" 1231219902 (list item1) false false))
