@@ -49,6 +49,10 @@
                                                    (make-order 20 "Jack" 555043135415 (list item1 item2)
                                                                false
                                                                false)))))
+(define order2 (make-order  30 "Bill" 12390967812 (list item1) false
+                            (make-order 38 "Mary" 12390967701 (list item4 item1)
+                                        (make-order 35 "Gary" 1239092310 (list item2) false false)
+                                        false)))
 
 ; 3
 
@@ -79,9 +83,9 @@
 
 ;; tree-fcn:  TreeNode ->
 ;;
- #;(define (tree-fcn atree)
-   (cond [(boolean? atree) (...)]
-         [(order? atree) (... (order-order-number atree)
+#;(define (tree-fcn atree)
+    (cond [(boolean? atree) (...)]
+          [(order? atree) (... (order-order-number atree)
                                (order-name atree)
                                (order-credit-card atree)
                                (order-aloi atree)
@@ -89,11 +93,21 @@
                                (tree-fcn (order-left atree)))]))
 
 ; 4
-
+;; add-cost: ListOfItem -> Natural
+;; Takes a list of items and adds up the total cost of the items in the list
 (define (add-cost aloi)
   (cond [(empty? aloi) 0]
         [(cons? aloi) (+ (* (item-quantity (first aloi)) (item-price (first aloi))) (add-cost (rest aloi)))]))
+(check-expect (add-cost empty) 0)
+(check-expect (add-cost (list item1)) 10)
+(check-expect (add-cost (list item1 item2)) 20)
+(check-expect (add-cost (list item1 item2 item3)) 35)
+(check-expect (add-cost (list item1 item2 item3 item4)) 40)
 
+
+
+;; order-cost: -> BST Natural -> Natural
+;; Takes in a binary seatch tree and order number and produces the total cost of the orders
 (define (order-cost atree order-number)
   (cond [(boolean? atree) -1]
         [(order? atree) (if (< order-number (order-order-number atree))
@@ -117,28 +131,38 @@
 ; insert: Node BST -> BST
 ; insert node into BST
 #;(define (insert a-node a-tree);update programs will look like this
-  (cond [(boolean? a-tree) a-node];most complicated base case we've seen!
-        [(node? a-node) (if (< (node-key a-node) (node-key a-tree))
-                            (make-node (node-key a-tree)
-                                       (node-object a-tree)
-                                       (node-index a-tree)
-                                       (insert a-node (node-left a-tree))
-                                       (node-right a-tree))
+    (cond [(boolean? a-tree) a-node];most complicated base case we've seen!
+          [(node? a-node) (if (< (node-key a-node) (node-key a-tree))
+                              (make-node (node-key a-tree)
+                                         (node-object a-tree)
+                                         (node-index a-tree)
+                                         (insert a-node (node-left a-tree))
+                                         (node-right a-tree))
                             
-                            (make-node (node-key a-tree)
-                                       (node-object a-tree)
-                                       (node-index a-tree)
-                                       (node-left a-tree)
-                                       (insert a-node (node-right a-tree))))]))
+                              (make-node (node-key a-tree)
+                                         (node-object a-tree)
+                                         (node-index a-tree)
+                                         (node-left a-tree)
+                                         (insert a-node (node-right a-tree))))]))
 
 ;; 5
 
+;; remove-item: ListOfItem Natural -> ListOfNatural
+;; Takes in a list of item and item number and removes the item number from the list of item and returns a list of natural with the remaining items numbers
 (define (remove-item loi item-num)
   (cond [(empty? loi) empty]
         [(cons? loi) (if (= item-num (item-item-number (first loi)))
                          (remove-item (rest loi) item-num)
                          (cons (item-item-number (first loi)) (remove-item (rest loi) item-num)))]))
 
+(check-expect (remove-item empty 54503) empty)
+(check-expect (remove-item (list item1 item2) 54503) (list 42013))
+(check-expect (remove-item (list item1 item2) 42013) (list 54503))
+(check-expect (remove-item (list item2 item1 item3) 92503) (list 42013 54503))
+(check-expect (remove-item (list item2 item1 item3 item4) 60240) (list 42013 54503 92503))
+
+;; remove-item-from-all-orders: BST Natural -> BST
+;; Takes in a binary search tree and item number and returns a binary search tree with the any item with the same item number removed from every order
 (define (remove-item-from-all-orders atree item-num)
   (cond [(boolean? atree) atree]
         [(order? atree) (make-order (order-order-number atree)
@@ -147,6 +171,22 @@
                                     (remove-item (order-aloi atree) item-num)
                                     (remove-item-from-all-orders (order-left atree) item-num)
                                     (remove-item-from-all-orders (order-right atree) item-num))]))
+
+
+(check-expect (remove-item-from-all-orders order1 54503)(make-order
+                                                         10
+                                                         "Paul"
+                                                         5002200053026
+                                                         (list 42013)
+                                                         (make-order 8 "Bob" 5002200053026 (list 42013 92503) (make-order 5 "Bobby" 5002200020456 (list 92503) (make-order 3 "Max" 20145656323102 (list 42013 60240) #false #false) #false) #false)
+                                                         (make-order
+                                                          12
+                                                          "Greg"
+                                                          555043135435
+                                                          (list 92503)
+                                                          #false
+                                                          (make-order 18 "Aaron" 555043135425 (list 42013 92503) (make-order 16 "Karen" 555043135445 (list 42013 60240) #false #false) (make-order 20 "Jack" 555043135415 (list 42013) #false #false)))))
+(check-expect (remove-item-from-all-orders order2 42013) (make-order 30 "Bill" 12390967812 (list 54503) #false (make-order 38 "Mary" 12390967701 (list 60240 54503) (make-order 35 "Gary" 1239092310 '() #false #false) #false)))
 
 ;; 6
 
