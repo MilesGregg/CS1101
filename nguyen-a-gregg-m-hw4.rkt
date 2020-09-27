@@ -3,7 +3,8 @@
 #reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname nguyen-a-gregg-m-hw4) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
 
-; 1
+;;----------------------------------------------------------------------------------------
+;; 1
 
 ;; a Order is a (make-order String Natural TreeNode)
 ;;  interp:  represents a order in a tree of orders
@@ -25,12 +26,15 @@
 ;                         price (price of the item)
 (define-struct item (item-number description quantity price))
 
-; 2
+;;----------------------------------------------------------------------------------------
+;; 2
 
 (define item1 (make-item 54503 "A toy" 2 5.00))
 (define item2 (make-item 42013 "A brick" 2 5.00))
 (define item3 (make-item 92503 "A stick" 3 5.00))
 (define item4 (make-item 60240 "A computer" 1 5.00))
+(define item5 (make-item 25460 "Hot Dog" 4 3.00))
+(define item6 (make-item 32046 "Calculator" 3 6.00))
 
 (define order1 (make-order 10 "Paul" 5002200053026 (list item1 item2)
                            (make-order 8 "Bob" 5002200053026 (list item2 item3)
@@ -49,12 +53,22 @@
                                                    (make-order 20 "Jack" 555043135415 (list item1 item2)
                                                                false
                                                                false)))))
+
 (define order2 (make-order  30 "Bill" 12390967812 (list item1) false
                             (make-order 38 "Mary" 12390967701 (list item4 item1)
                                         (make-order 35 "Gary" 1239092310 (list item2) false false)
                                         false)))
 
-; 3
+(define order3 (make-order  30 "Bill" 12390967812 (list item1)
+                            (make-order 25 "Joe" 12390967882 (list item6 item5)
+                                        (make-order 20 "Gavin" 12390967820 (list item4 item6) false false)
+                                        false)
+                            (make-order 38 "Mary" 12390967701 (list item4 item1)
+                                        (make-order 35 "Gary" 1239092310 (list item2) false false)
+                                        false)))
+
+;;----------------------------------------------------------------------------------------
+;; 3
 
 ; ;; order-fcn:  order ->
 ; ;;
@@ -92,12 +106,15 @@
                                (tree-fcn (order-right atree))
                                (tree-fcn (order-left atree)))]))
 
-; 4
+;;----------------------------------------------------------------------------------------
+;; 4
+
 ;; add-cost: ListOfItem -> Natural
 ;; Takes a list of items and adds up the total cost of the items in the list
 (define (add-cost aloi)
   (cond [(empty? aloi) 0]
         [(cons? aloi) (+ (* (item-quantity (first aloi)) (item-price (first aloi))) (add-cost (rest aloi)))]))
+
 (check-expect (add-cost empty) 0)
 (check-expect (add-cost (list item1)) 10)
 (check-expect (add-cost (list item1 item2)) 20)
@@ -125,26 +142,7 @@
 (check-expect (order-cost order1 5) 25)
 (check-expect (order-cost order1 4) -1)
 
-;(check-expect (order-cost order1 3) -1)
-;; (order-left atree)
-
-; insert: Node BST -> BST
-; insert node into BST
-#;(define (insert a-node a-tree);update programs will look like this
-    (cond [(boolean? a-tree) a-node];most complicated base case we've seen!
-          [(node? a-node) (if (< (node-key a-node) (node-key a-tree))
-                              (make-node (node-key a-tree)
-                                         (node-object a-tree)
-                                         (node-index a-tree)
-                                         (insert a-node (node-left a-tree))
-                                         (node-right a-tree))
-                            
-                              (make-node (node-key a-tree)
-                                         (node-object a-tree)
-                                         (node-index a-tree)
-                                         (node-left a-tree)
-                                         (insert a-node (node-right a-tree))))]))
-
+;;----------------------------------------------------------------------------------------
 ;; 5
 
 ;; remove-item: ListOfItem Natural -> ListOfNatural
@@ -188,16 +186,22 @@
                                                           (make-order 18 "Aaron" 555043135425 (list 42013 92503) (make-order 16 "Karen" 555043135445 (list 42013 60240) #false #false) (make-order 20 "Jack" 555043135415 (list 42013) #false #false)))))
 (check-expect (remove-item-from-all-orders order2 42013) (make-order 30 "Bill" 12390967812 (list 54503) #false (make-order 38 "Mary" 12390967701 (list 60240 54503) (make-order 35 "Gary" 1239092310 '() #false #false) #false)))
 
+;;----------------------------------------------------------------------------------------
 ;; 6
 
+;; list-sorted-order-numbers: BST -> ListOfNatural
+;; Consumes a binary search tree and then produces a list of naturals of the order-numbers in accending order of the binary search tree
 (define (list-sorted-order-numbers atree)
   (cond [(boolean? atree) empty]
         [(order? atree) (append (list-sorted-order-numbers (order-left atree))
                                 (cons (order-order-number atree)
                                       (list-sorted-order-numbers (order-right atree))))]))
 
-(list-sorted-order-numbers order1)
+(check-expect (list-sorted-order-numbers order1) (list 3 5 8 10 12 16 18 20))
+(check-expect (list-sorted-order-numbers order2) (list 30 35 38))
+(check-expect (list-sorted-order-numbers order3) (list 20 25 30 35 38))
 
+;;----------------------------------------------------------------------------------------
 ;; 7
 
 (define (add-new-order atree a-order-number a-customer-name a-credit-card-number a-aloi)
@@ -216,5 +220,92 @@
                                         (order-left atree)
                                         (add-new-order (order-right atree) a-order-number a-customer-name a-credit-card-number a-aloi)))]))
      
-(add-new-order order1 2 "jill" 1231219902 (list item1))                            
-(define ORDERJ (make-order 20 "jill" 1231219902 (list item1) false false))
+;(add-new-order order1 2 "jill" 1231219902 (list item1))
+
+(check-expect (add-new-order order1 2 "jill" 1231219902 (list item1)) (make-order
+                                                                       10
+                                                                       "Paul"
+                                                                       5002200053026
+                                                                       (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5))
+                                                                       (make-order
+                                                                        8
+                                                                        "Bob"
+                                                                        5002200053026
+                                                                        (list (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                        (make-order
+                                                                         5
+                                                                         "Bobby"
+                                                                         5002200020456
+                                                                         (list (make-item 54503 "A toy" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                         (make-order 3 "Max" 20145656323102 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5))
+                                                                                     (make-order 2 "jill" 1231219902 (list (make-item 54503 "A toy" 2 5)) #false #false)
+                                                                                     #false)
+                                                                         #false)
+                                                                        #false)
+                                                                       (make-order
+                                                                        12
+                                                                        "Greg"
+                                                                        555043135435
+                                                                        (list (make-item 92503 "A stick" 3 5) (make-item 54503 "A toy" 2 5))
+                                                                        #false
+                                                                        (make-order
+                                                                         18
+                                                                         "Aaron"
+                                                                         555043135425
+                                                                         (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                         (make-order 16 "Karen" 555043135445 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5)) #false #false)
+                                                                         (make-order 20 "Jack" 555043135415 (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5)) #false #false)))))
+
+(check-expect (add-new-order order1 15 "Toby" 1231219902 (list item2 item6)) (make-order
+                                                                              10
+                                                                              "Paul"
+                                                                              5002200053026
+                                                                              (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5))
+                                                                              (make-order
+                                                                               8
+                                                                               "Bob"
+                                                                               5002200053026
+                                                                               (list (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                               (make-order 5 "Bobby" 5002200020456 (list (make-item 54503 "A toy" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                                           (make-order 3 "Max" 20145656323102 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5)) #false #false)
+                                                                                           #false)
+                                                                               #false)
+                                                                              (make-order
+                                                                               12
+                                                                               "Greg"
+                                                                               555043135435
+                                                                               (list (make-item 92503 "A stick" 3 5) (make-item 54503 "A toy" 2 5))
+                                                                               #false
+                                                                               (make-order
+                                                                                18
+                                                                                "Aaron"
+                                                                                555043135425
+                                                                                (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                                (make-order 16 "Karen" 555043135445 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5)) (make-order 15 "Toby" 1231219902 (list (make-item 42013 "A brick" 2 5) (make-item 32046 "Calculator" 3 6)) #false #false) #false)
+                                                                                (make-order 20 "Jack" 555043135415 (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5)) #false #false)))))
+
+(check-expect (add-new-order order1 30 "Dom" 1231219952 (list item3 item4)) (make-order
+                                                                              10
+                                                                              "Paul"
+                                                                              5002200053026
+                                                                              (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5))
+                                                                              (make-order
+                                                                               8
+                                                                               "Bob"
+                                                                               5002200053026
+                                                                               (list (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                               (make-order 5 "Bobby" 5002200020456 (list (make-item 54503 "A toy" 2 5) (make-item 92503 "A stick" 3 5)) (make-order 3 "Max" 20145656323102 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5)) #false #false) #false)
+                                                                               #false)
+                                                                              (make-order
+                                                                               12
+                                                                               "Greg"
+                                                                               555043135435
+                                                                               (list (make-item 92503 "A stick" 3 5) (make-item 54503 "A toy" 2 5))
+                                                                               #false
+                                                                               (make-order
+                                                                                18
+                                                                                "Aaron"
+                                                                                555043135425
+                                                                                (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5) (make-item 92503 "A stick" 3 5))
+                                                                                (make-order 16 "Karen" 555043135445 (list (make-item 42013 "A brick" 2 5) (make-item 60240 "A computer" 1 5)) #false #false)
+                                                                                (make-order 20 "Jack" 555043135415 (list (make-item 54503 "A toy" 2 5) (make-item 42013 "A brick" 2 5)) #false (make-order 30 "Dom" 1231219952 (list (make-item 92503 "A stick" 3 5) (make-item 60240 "A computer" 1 5)) #false #false))))))
