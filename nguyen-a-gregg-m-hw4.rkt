@@ -147,11 +147,11 @@
 
 ;; remove-item: ListOfItem Natural -> ListOfNatural
 ;; Takes in a list of item and item number and removes the item number from the list of item and returns a list of natural with the remaining items numbers
-(define (remove-item loi item-num)
-  (cond [(empty? loi) empty]
-        [(cons? loi) (if (= item-num (item-item-number (first loi)))
-                         (remove-item (rest loi) item-num)
-                         (cons (item-item-number (first loi)) (remove-item (rest loi) item-num)))]))
+(define (remove-item aloi item-num)
+  (cond [(empty? aloi) empty]
+        [(cons? aloi) (if (= item-num (item-item-number (first aloi)))
+                         (remove-item (rest aloi) item-num)
+                         (cons (item-item-number (first aloi)) (remove-item (rest aloi) item-num)))]))
 
 (check-expect (remove-item empty 54503) empty)
 (check-expect (remove-item (list item1 item2) 54503) (list 42013))
@@ -194,8 +194,8 @@
 (define (list-sorted-order-numbers atree)
   (cond [(boolean? atree) empty]
         [(order? atree) (append (list-sorted-order-numbers (order-left atree))
-                                (cons (order-order-number atree)
-                                      (list-sorted-order-numbers (order-right atree))))]))
+                                (list (order-order-number atree))
+                                (list-sorted-order-numbers (order-right atree)))]))
 
 (check-expect (list-sorted-order-numbers order1) (list 3 5 8 10 12 16 18 20))
 (check-expect (list-sorted-order-numbers order2) (list 30 35 38))
@@ -204,6 +204,8 @@
 ;;----------------------------------------------------------------------------------------
 ;; 7
 
+;; add-new-oder: BST Natural String Natural ListOfItems -> BST
+;; consumes a BST, order number, custormer name, credit card number, and a ListOfItems then produces a new BST with the new node inserted 
 (define (add-new-order atree a-order-number a-customer-name a-credit-card-number a-aloi)
   (cond [(boolean? atree) (make-order a-order-number a-customer-name a-credit-card-number a-aloi false false)]
         [(order? atree) (if (< a-order-number (order-order-number atree))
@@ -219,8 +221,6 @@
                                         (order-aloi atree)
                                         (order-left atree)
                                         (add-new-order (order-right atree) a-order-number a-customer-name a-credit-card-number a-aloi)))]))
-     
-;(add-new-order order1 2 "jill" 1231219902 (list item1))
 
 (check-expect (add-new-order order1 2 "jill" 1231219902 (list item1)) (make-order
                                                                        10
