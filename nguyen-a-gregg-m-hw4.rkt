@@ -54,7 +54,8 @@
                                                                false
                                                                false)))))
 
-(define order2 (make-order  30 "Bill" 12390967812 (list item1) false
+(define order2 (make-order  30 "Bill" 12390967812 (list item1)
+                            false
                             (make-order 38 "Mary" 12390967701 (list item4 item1)
                                         (make-order 35 "Gary" 1239092310 (list item2)
                                                     false
