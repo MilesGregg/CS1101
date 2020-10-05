@@ -1,0 +1,70 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname nguyen-a-gregg-m-hw5) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;; 1
+
+;; a River is a (make-river String String Natural ListOfRivers)
+;;  interp:  represents a river along with other rivers
+;;     name is the name of the river
+;;     pH is pH of the water
+;;     DO in measused in parts per million
+;;     rivers is the list of other rivers
+(define-struct river (name pH DO rivers))
+
+;; 2
+
+(define RIVERS
+  (make-river "Missouri" 12 5
+               (list (make-river "Jefferson" 6.5 6
+                                 (list (make-river "Beaverhead" 8.5 7 empty)
+                                       (make-river "Big Hole" 7.5 3 empty)))
+                     (make-river "Sun" 2.2 4 empty)
+                     (make-river "Yellowstone" 12 5
+                                 (list (make-river "Gardner" 3 12 empty)
+                                       (make-river "Shields" 4 0 empty)
+                                       (make-river "Boulder" 6 3 empty)))
+                     (make-river "Madison" 8 4 empty)
+                     (make-river "Gallatin" 8.5 7 empty))))
+
+;; 3
+
+; ;; river-fcn:  River ->
+; ;;
+; (define (river-fcn: a-river)
+;   (...  (river-name a-river)
+;         (river-pH a-river)
+;         (river-DO a-person)
+;         (lor-fcn: (river-rivers a-river))))
+; 
+; 
+; ;; lor-fcn:  ListOfRivers ->
+; ;;
+; (define (lor-fcn: alor)
+;   (cond [(empty? alor) (...)]
+;         [(cons? alor)  (...  (river-fcn: (first alor))
+;                              (lor-fcn: (rest alor)))]))
+; 
+
+
+;; 4
+
+(define (lower-ph-than alob)
+  (cond [(empty? alob) 0]
+        [(cons? alob) (if (beast-boat? (first alob))
+                          (+ 1 (beastly-boats (rest alob)))
+                          (beastly-boats (rest alob)))]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
