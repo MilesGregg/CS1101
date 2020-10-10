@@ -74,19 +74,17 @@
 ;; 5
 
 (define (add-to-course id dept course-num)
-  (begin
-    (if (boolean=? (add-student-to-course id dept course-num courses) true)
-        0
-        1)))
-    ;;(set! courses (add-student-to-course id dept course-num courses))))
-
+  (set! courses (add-student-to-course id dept course-num courses)))
 
 (define (add-student-to-course id dept course-num aloc)
   (cond [(empty? aloc) (error "course doesn't exist")]
         [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
                                (string=? dept (course-department (first aloc))))
                           (if (>= (course-max-enrollment (first aloc)) (length (course-students (first aloc))))
-                              (set-course-students! (first aloc) (cons (find-student id students) (course-students (first aloc))))
+                              (cons (make-course))
+;                              (begin
+;                                (set-student-courses! (find-student id students) (cons (first aloc) (student-courses (find-student id students))))
+;                                (set-course-students! (first aloc) (cons (find-student id students) (course-students (first aloc)))))
                               (error "course is full!"))
                           (add-student-to-course id dept course-num (rest aloc)))]))
 
@@ -96,7 +94,15 @@
                           (first alos)
                           (find-student id (rest alos)))]))
 
-(add-student-to-course 104 "CS" 1101 courses)
+(define TEST 1)
+(define TEST2 1)
+
+(define (testing)
+  (begin
+    (set! TEST 3)
+    (set! TEST2 5)))
+
+;(add-student-to-course 104 "CS" 1101 courses)
 
 ;(define (add-course-to-student))
 
