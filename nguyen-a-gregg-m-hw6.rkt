@@ -55,7 +55,7 @@
 (define (add-course dept course-num faculty max-enroll)
   (if (course-in-list? courses dept course-num)
       "course already exists"
-      (set! courses (cons (make-course dept course-num faculty max-enroll empty)))))
+      (set! courses (cons (make-course dept course-num faculty max-enroll empty) courses))))
 
 (define (course-in-list? aloc dept course-num)
   (cond [(empty? aloc) false]
@@ -64,18 +64,74 @@
                           true
                           (course-in-list? (rest aloc) dept course-num))]))
 
-;(define (add-course dept course-num faculty max-enroll)
-;  (if (string? (course?? c dept course-num faculty max-enroll))
-;      "course already exists"
-;  (set! c (course?? c dept course-num faculty max-enroll))))
-;
-;(define (course?? aloc dept course-num faculty max-enroll)
-;  (cond [(empty? aloc) (cons (make-course dept course-num faculty max-enroll empty) c)]
-;        [else
-;         (if (and (string=? dept (course-department (first aloc))) (= course-num (course-course-number (first aloc))))
-;             "course already exists"
-;             (course?? (rest aloc) dept course-num faculty max-enroll))]))
+(add-student "Joe" 123)
+(add-student "Ann" 456)
+(add-student "Chris" 789)
+(add-course "CS" 1101 "Hamel" 100)
+(add-course "BI" 1000 "Rulfs" 20)
+(add-course "MA" 2201 "Servatius" 50)
 
 ;; 5
 
-(define)
+(define (add-to-course id dept course-num)
+  (begin
+    (if (boolean=? (add-student-to-course id dept course-num courses) true)
+        0
+        1)))
+    ;;(set! courses (add-student-to-course id dept course-num courses))))
+
+
+(define (add-student-to-course id dept course-num aloc)
+  (cond [(empty? aloc) (error "course doesn't exist")]
+        [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
+                               (string=? dept (course-department (first aloc))))
+                          (if (>= (course-max-enrollment (first aloc)) (length (course-students (first aloc))))
+                              (set-course-students! (first aloc) (cons (find-student id students) (course-students (first aloc))))
+                              (error "course is full!"))
+                          (add-student-to-course id dept course-num (rest aloc)))]))
+
+(define (find-student id alos)
+  (cond [(empty? alos) (error "student doesn't exist")]
+        [(cons? alos) (if (= id (student-id (first alos)))
+                          (first alos)
+                          (find-student id (rest alos)))]))
+
+(add-student-to-course 104 "CS" 1101 courses)
+
+;(define (add-course-to-student))
+
+
+;(define (add-to-course id dept course-num)
+;  (set! courses (course-helper courses id dept course-num)))
+;
+;(define (course-helper aloc id dept course-num)
+;  (cond [(empty? aloc) (error "course doesn't exist")]
+;        [(cons? aloc) (if (and (string=? dept (course-department (first aloc)))
+;                               (= course-num (course-course-number (first aloc)))
+;                               (>= (course-max-enrollment (first aloc)) (length (course-students (first aloc)))))
+;                          (set-course-students! (first aloc) (cons (make-student (student-helper students id) id empty) students))
+;                          (course-helper (rest aloc) id dept course-num))]))
+;
+;         ;(if (>= (course-max-enrollment (first aloc)) (course-students (first aloc))))]))
+;
+;(define (student-helper alos id)
+;  (cond [(empty? alos) (error "student doesn't exist")]
+;        [(cons? alos) (if (= id (student-id (first alos)))
+;                          (first alos)
+;                          (student-helper (rest alos) id))]))
+
+
+;(add-to-course 456 "MA" 2201)
+;(add-to-course 456 "CS" 1101)
+;(add-to-course 123 "CS" 1101)
+;(add-to-course 789 "BI" 1000)
+
+
+
+
+
+
+
+
+
+
