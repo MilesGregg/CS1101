@@ -134,20 +134,6 @@
 ;(add-to-course 123 "CS" 1101)
 ;(add-to-course 789 "BI" 1000)
 
-;; 6
-
-;(define (largest-enrollment)
-
-
-(define (enrollment aloc)
-  (cond [(empty? aloc) aloc]
-                  [else
-                   (if (> (length (course-students (first aloc))) (length (course-students (first (rest aloc)))))
-                       (cons (first aloc) (enrollment (rest aloc)))
-                       (cons (first (rest aloc)) (enrollment (rest aloc))))]))
-    
-                       
-
 
 
 
