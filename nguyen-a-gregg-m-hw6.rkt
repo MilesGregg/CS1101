@@ -70,6 +70,7 @@
 (add-course "CS" 1101 "Hamel" 100)
 (add-course "BI" 1000 "Rulfs" 20)
 (add-course "MA" 2201 "Servatius" 50)
+(add-course "MA" 2202 "Bob" 0)
 
 ;; 5
 
@@ -80,13 +81,14 @@
   (cond [(empty? aloc) (error "course doesn't exist")]
         [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
                                (string=? dept (course-department (first aloc))))
-                          (if (>= (course-max-enrollment (first aloc)) (length (course-students (first aloc))))
-                              (cons (make-course))
-;                              (begin
-;                                (set-student-courses! (find-student id students) (cons (first aloc) (student-courses (find-student id students))))
-;                                (set-course-students! (first aloc) (cons (find-student id students) (course-students (first aloc)))))
+                          (if (> (course-max-enrollment (first aloc)) (length (course-students (first aloc))))
+                              (begin
+                                (set-student-courses! (find-student id students) (first aloc))
+                                (cons (make-course dept course-num (course-faculty (first aloc))
+                                                 (course-max-enrollment (first aloc))
+                                                 (cons (find-student id students) (course-students (first aloc)))) (rest aloc)))
                               (error "course is full!"))
-                          (add-student-to-course id dept course-num (rest aloc)))]))
+                          (cons (first aloc) (add-student-to-course id dept course-num (rest aloc))))]))
 
 (define (find-student id alos)
   (cond [(empty? alos) (error "student doesn't exist")]
