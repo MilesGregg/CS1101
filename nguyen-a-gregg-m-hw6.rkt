@@ -31,10 +31,10 @@
 
 ;; 2
 
-;; c represents a list of courses that is empty
+;; courses represents a list of courses that is empty
 (define courses empty)
 
-;; s represents a list of students that is empty
+;; students represents a list of students that is empty
 (define students empty)
 
 ;; 3
@@ -96,14 +96,6 @@
                           (first alos)
                           (find-student id (rest alos)))]))
 
-(define TEST 1)
-(define TEST2 1)
-
-(define (testing)
-  (begin
-    (set! TEST 3)
-    (set! TEST2 5)))
-
 ;(add-student-to-course 104 "CS" 1101 courses)
 
 ;(define (add-course-to-student))
@@ -139,14 +131,29 @@
 ;(define (largest-enrollment)
 
 
-(define (enrollment aloc)
-  (cond [(empty? aloc) aloc]
-                  [else
-                   (if (> (length (course-students (first aloc))) (length (course-students (first (rest aloc)))))
-                       (cons (first aloc) (enrollment (rest aloc)))
-                       (cons (first (rest aloc)) (enrollment (rest aloc))))]))
-    
-                       
+
+(define (largest-enrollment)
+  (local [(define (find-largest aloc acc)
+            (cond [(empty? aloc) acc]
+                  [(cons? aloc) (if (> (length (course-students (first aloc))) (length (course-students acc)))
+                                    (find-largest (rest aloc) (first aloc))
+                                    (find-largest (rest aloc) acc))]))]
+    (if (empty? courses)
+        (error "no courses")
+        (find-largest (rest courses) (first courses)))))
+;    (begin
+;      (if (empty? courses))
+;      (empty? courses) (error "no courses")
+;      (find-largest (rest courses) (first courses)))))
+    ;(find-largest (rest courses) (first courses))))
+
+
+
+
+
+
+
+
 
 
 
