@@ -1,6 +1,9 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-advanced-reader.ss" "lang")((modname nguyen-a-gregg-m-hw6) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
+
+;;----------------------------------------------------------------------------------------
 ;; 1
 
 (define-struct course (department course-number faculty max-enrollment students))
@@ -29,6 +32,7 @@
 ;;   -empty
 ;;   - (cons Courses ListOfCouses)
 
+;;----------------------------------------------------------------------------------------
 ;; 2
 
 ;; courses represents a list of courses that is empty
@@ -37,6 +41,7 @@
 ;; students represents a list of students that is empty
 (define students empty)
 
+;;----------------------------------------------------------------------------------------
 ;; 3
 
 ;; add-student: String Natural -> void
@@ -46,7 +51,6 @@
   (if (student-id-in-list? students name id)
       (error "student already exists")
       (set! students (cons (make-student name id empty) students))))
-
 
 ;; student-id-in-list?: ListOfStudent String Natural -> Boolean
 ;; Consumes a list of student a name and id and produces true if the student exists and false if the student doesn't exist.
@@ -61,6 +65,7 @@
 (check-expect (student-id-in-list? students "Christ" 789) true)
 (check-expect (student-id-in-list? students "Bob" 123) true)
 
+;;----------------------------------------------------------------------------------------
 ;; 4
 
 ;; add-course: String Natural String Natural -> void
@@ -93,19 +98,51 @@
 (add-course "MA" 2201 "Servatius" 50)
 (add-course "MA" 2202 "Bob" 0)
 
+;;----------------------------------------------------------------------------------------
 ;; 5
+
+;; NEW
+
+(define (add-to-course id dept course-num)
+  (local [(define a-student (find-student id students))
+          (define a-course (find-course dept course-num courses))]
+    (if (> (course-max-enrollment a-course) (length (course-students a-course)))
+        (begin
+          (set-course-students! a-course (cons a-student (course-students a-course)))
+          (set-student-courses! a-student (cons a-course (student-courses a-student))))
+        (error "course is full!"))))
+
+(define (find-student id alos)
+  (cond [(empty? alos) (error "student doesn't exist")]
+        [(cons? alos) (if (= id (student-id (first alos)))
+                          (first alos)
+                          (find-student id (rest alos)))]))
+
+(define (find-course dept course-num aloc)
+  (cond [(empty? aloc) (error "course doesn't exist")]
+        [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
+                               (string=? dept (course-department (first aloc))))
+                          (first aloc)
+                          (find-course dept course-num (rest aloc)))]))
+
+
+
+
+
+
+
 
 ;; add-to-coures: Natural String Natural -> void
 ;; Consumes a students id and course department and number and adds student to the courses list of students
 ;; and adds the course to the students list of students if the course is not full.
 ;; EFFECT: Adds student to a course's list of students, Adds course to a student's list of courses
-(define (add-to-course id dept course-num)
+#;(define (add-to-course id dept course-num)
   (set! courses (add-student-to-course id dept course-num courses)))
 
 ;; add-student-to-course: Natural String Natural ListOfCouse -> ListOfCourse
 ;; Consumes a student ID a course department and number and a list of courses and produces a list of courses with
 ;; the student added to the course with the given department and course number in the list of courses
-(define (add-student-to-course id dept course-num aloc)
+#;(define (add-student-to-course id dept course-num aloc)
   (cond [(empty? aloc) (error "course doesn't exist")]
         [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
                                (string=? dept (course-department (first aloc))))
@@ -131,7 +168,7 @@
 
 ;; find-student: Natural ListOfStudent -> Student
 ;; Consumes an ID and a list of student and produces the student with given ID or an error if the student doesn't exist
-(define (find-student id alos)
+#;(define (find-student id alos)
   (cond [(empty? alos) (error "student doesn't exist")]
         [(cons? alos) (if (= id (student-id (first alos)))
                           (first alos)
@@ -142,13 +179,11 @@
 (check-expect (find-student 456 students) (make-student "Ann" 456 '()))
 (check-expect (find-student 123 students) (make-student "Joe" 123 (make-course "MA" 2201 "Servatius" 50 '()))) 
 
-
+;;----------------------------------------------------------------------------------------
 ;; 6
-
 
 ;; largest-enrollment: -> Course
 ;; produces the course with the most amount of students enrolled
-
 (define (largest-enrollment)
   (local [(define (find-largest aloc acc)
             (cond [(empty? aloc) acc]
@@ -159,22 +194,4 @@
         (error "no courses")
         (find-largest (rest courses) (first courses)))))
 
-(check-expect (largest-enrollment) (make-course "MA" 2202 "Bob" 0 '())) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+(check-expect (largest-enrollment) (make-course "MA" 2202 "Bob" 0 '()))
