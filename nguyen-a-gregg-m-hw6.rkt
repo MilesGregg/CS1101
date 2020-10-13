@@ -1,7 +1,7 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-advanced-reader.ss" "lang")((modname nguyen-a-gregg-m-hw6) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
-;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
+ ;;Aaron Nguyen (anguyen3) , Miles Gregg (mgregg)
 
 ;;----------------------------------------------------------------------------------------
 ;; 1
@@ -103,6 +103,10 @@
 
 ;; NEW
 
+;; add-to-coures: Natural String Natural-> void
+;; Consumes a students id and course department and number and adds student to the courses list of students
+;; and adds the course to the students list of students if the course is not full.
+;; EFFECT: Adds student to a course's list of students, Adds course to a student's list of courses
 (define (add-to-course id dept course-num)
   (local [(define a-student (find-student id students))
           (define a-course (find-course dept course-num courses))]
@@ -112,12 +116,22 @@
           (set-student-courses! a-student (cons a-course (student-courses a-student))))
         (error "course is full!"))))
 
+;; find-student: Natural ListOfStudent -> Student
+;; Consumes an ID and a list of student and produces the student with given ID or an error if the student doesn't exist
 (define (find-student id alos)
   (cond [(empty? alos) (error "student doesn't exist")]
         [(cons? alos) (if (= id (student-id (first alos)))
                           (first alos)
                           (find-student id (rest alos)))]))
 
+(check-error (find-student 123 empty) "student doesn't exist")
+(check-error (find-student 101 students) "student doesn't exist")
+(check-expect (find-student 456 students) (make-student "Ann" 456 '()))
+(check-expect (find-student 123 students) (make-student "Joe" 123 '())) 
+
+;; find-course: String Natural ListOfCourse -> Course
+;; Consume a department, course number and a list of course and returns the course if it is in the list and
+;; an error course doesn't exist if it is not in the list
 (define (find-course dept course-num aloc)
   (cond [(empty? aloc) (error "course doesn't exist")]
         [(cons? aloc) (if (and (= course-num (course-course-number (first aloc)))
@@ -125,8 +139,11 @@
                           (first aloc)
                           (find-course dept course-num (rest aloc)))]))
 
-
-
+(check-error (find-course "ECON" 1 courses) "course doesn't exist")
+(check-error (find-course "MA" 2 courses) "course doesn't exist")
+(check-error (find-course "MA" 2201 empty) "course doesn't exist")
+(check-expect (find-course "MA" 2201 courses) (make-course "MA" 2201 "Servatius" 50 '()))
+(check-expect (find-course "CS" 1101 courses) (make-course "CS" 1101 "Hamel" 100 '()))
 
 
 
@@ -155,16 +172,16 @@
                               (error "course is full!"))
                           (cons (first aloc) (add-student-to-course id dept course-num (rest aloc))))]))
 
-(check-error (add-student-to-course 123 "MA" 2201 empty) "course doesn't exist")
-(check-error (add-student-to-course 123 "ECON" 1101 courses)  "course doesn't exist")
-(check-error (add-student-to-course 101 "MA" 2201 courses) "student doesn't exist")
-(check-error (add-student-to-course 123 "MA" 2202 courses) "course is full!")
-(check-expect (add-student-to-course 123 "MA" 2201 courses) (shared ((-2- "MA") (-6- "Servatius"))
-                                                              (list
-                                                               (make-course -2- 2202 "Bob" 0 '())
-                                                               (make-course -2- 2201 -6- 50 (list (make-student "Joe" 123 (make-course -2- 2201 -6- 50 '()))))
-                                                               (make-course "BI" 1000 "Rulfs" 20 '())
-                                                               (make-course "CS" 1101 "Hamel" 100 '()))))
+;(check-error (add-student-to-course 123 "MA" 2201 empty) "course doesn't exist")
+;(check-error (add-student-to-course 123 "ECON" 1101 courses)  "course doesn't exist")
+;(check-error (add-student-to-course 101 "MA" 2201 courses) "student doesn't exist")
+;(check-error (add-student-to-course 123 "MA" 2202 courses) "course is full!")
+;(check-expect (add-student-to-course 123 "MA" 2201 courses) (shared ((-2- "MA") (-6- "Servatius"))
+;                                                              (list
+;                                                               (make-course -2- 2202 "Bob" 0 '())
+;                                                               (make-course -2- 2201 -6- 50 (list (make-student "Joe" 123 (make-course -2- 2201 -6- 50 '()))))
+;                                                               (make-course "BI" 1000 "Rulfs" 20 '())
+;                                                               (make-course "CS" 1101 "Hamel" 100 '()))))
 
 ;; find-student: Natural ListOfStudent -> Student
 ;; Consumes an ID and a list of student and produces the student with given ID or an error if the student doesn't exist
@@ -174,10 +191,10 @@
                           (first alos)
                           (find-student id (rest alos)))]))
 
-(check-error (find-student 123 empty) "student doesn't exist")
-(check-error (find-student 101 students) "student doesn't exist")
-(check-expect (find-student 456 students) (make-student "Ann" 456 '()))
-(check-expect (find-student 123 students) (make-student "Joe" 123 (make-course "MA" 2201 "Servatius" 50 '()))) 
+;(check-error (find-student 123 empty) "student doesn't exist")
+;(check-error (find-student 101 students) "student doesn't exist")
+;(check-expect (find-student 456 students) (make-student "Ann" 456 '()))
+;(check-expect (find-student 123 students) (make-student "Joe" 123 (make-course "MA" 2201 "Servatius" 50 '()))) 
 
 ;;----------------------------------------------------------------------------------------
 ;; 6
